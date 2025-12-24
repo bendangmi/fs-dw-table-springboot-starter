@@ -2,13 +2,36 @@
 
 Spring Boot starter for Feishu Bitable (DuoWeiTable) APIs. It provides typed
 request/response models, entity mapping helpers, and auto-configuration so
-consumers can add a dependency, set configuration, and start calling APIs.
+consumers can add a dependency, set configuration, and start calling APIs like
+they would with a database.
 Chinese version: `README.md`.
+
+## Vision
+
+- Use Feishu Bitable as a data source and offer database-like CRUD operations
+- Provide MyBatis-Plus-style querying with `DwLambdaQueryWrapper`
+- Hide Open API details so developers only need dependencies + configuration
+
+## Problems Solved
+
+- Removes token auth, request building, and response parsing boilerplate
+- Unifies field mapping and type conversion to avoid JSON/Map mismatches
+- Adds database-like filtering and pagination semantics for maintainable queries
+
+## Highlights
+
+- Spring Boot auto-configuration with Forest client scanning
+- Annotation-driven entity mapping (`@FsDwTable` / `@FsDwTableProperty` / `@FsDwTableId`)
+- `DwLambdaQueryWrapper` for conditions, sorting, pagination, and field selection
+- Layered Helper + Service APIs for quick use and extensible integration
+- In-memory token cache with refresh buffer to reduce auth calls
+- Unified error handling (`BitableException` / `BitableErrorCode`)
 
 ## Features
 
 - Auto-configuration with `@ForestScan` for API clients
-- `@FsDwTable` and `@FsDwTableProperty` for entity-to-field mapping
+- Annotation-driven entity mapping (`@FsDwTable` / `@FsDwTableProperty` / `@FsDwTableId`)
+- Database-like CRUD and MyBatis-Plus-style queries with `DwLambdaQueryWrapper`
 - Helper APIs for record, table, and field operations
 - Error handling with unified `BitableException` and `BitableErrorCode`
 
