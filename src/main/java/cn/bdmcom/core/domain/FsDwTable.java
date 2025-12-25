@@ -26,10 +26,10 @@ public @interface FsDwTable {
     /**
      * 默认视图名称（用于创建数据表时设置默认视图）。
      */
-    String defaultViewName() default  "";
+    String defaultViewName() default "";
 
     /**
      * 视图 ID。
      */
-    String viewId() ;
+    String viewId();
 }

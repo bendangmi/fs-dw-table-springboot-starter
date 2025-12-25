@@ -12,6 +12,75 @@ Chinese version: `README.md`.
 - Provide MyBatis-Plus-style querying with `DwLambdaQueryWrapper`
 - Hide Open API details so developers only need dependencies + configuration
 
+## Architecture
+
+### Layered Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     Application Layer                        │
+│  FsDwRecordHelper / FsDwTableHelper / FsDwFieldHelper       │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│                        Service Layer                         │
+│     FsDwRecordService / FsDwTableService / FsDwFieldService │
+│                      FsDwTokenService                        │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│                         API Layer (HTTP Client)              │
+│      FsDwRecordApi / FsDwTableApi / FsDwFieldApi             │
+│              (Forest Declarative HTTP Client)                │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│                    Feishu Bitable Open API                   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Core Components
+
+| Component | Responsibility | Description |
+|-----------|---------------|-------------|
+| `@EnableFsDwTable` | Enable Auto-Configuration | Explicit enablement to avoid conflicts |
+| `FsDwAutoConfiguration` | Auto-Configuration | Registers core beans and scans Forest interfaces |
+| `FsDwProperties` | Configuration Properties | Binds `duoweitable.*` config entries |
+| `FsDwTokenService` | Token Management | Caffeine-based high-performance caching with concurrency support and stats |
+| `DwLambdaQueryWrapper` | Query Builder | MyBatis-Plus style Lambda type-safe queries |
+| `FsDwRecordHelper` | Record Operation Helper | Static utility methods for convenient CRUD |
+| `BitableException` | Unified Exception | Exception hierarchy with error codes |
+
+### Annotation System
+
+```java
+@FsDwTable(name = "Table Name", tableId = "tblxxx", viewId = "vewxxx")
+public class Entity {
+    @FsDwTableId                    // Marks record ID field
+    private String recordId;
+
+    @FsDwTableProperty(value = "Field Name", order = 1, type = TypeEnum.TEXT)
+    private String fieldName;
+}
+```
+
+### HTTP Client
+
+This project uses **Forest** as the HTTP client, compared to RestTemplate/WebClient:
+- Declarative interface definitions without manual request code
+- Automatic JSON serialization/deserialization
+- Support for interceptors, filters, and other extensions
+- Built on OkHttp for excellent performance
+
+### Caching Strategy
+
+**Token Cache** uses Caffeine:
+- Automatic expiration (2 hours)
+- Thread-safe (based on ConcurrentHashMap)
+- LRU eviction policy (max 100 tokens)
+- Statistics support (hit rate, etc.)
+- 60-second refresh buffer
+
 ## Problems Solved
 
 - Removes token auth, request building, and response parsing boilerplate
@@ -251,6 +320,83 @@ public class DemoService {
 
 All helper/service methods throw `BitableException` on failures. Check
 `BitableErrorCode` for consistent error codes and messages.
+
+## Important Notes
+
+### 1. Pagination Performance
+
+Feishu Bitable's pagination mechanism differs from traditional database pagination (e.g., MySQL OFFSET):
+
+- **Sequential Pagination**: Feishu uses `page_token` mechanism requiring sequential fetch from page 1
+- **Performance Impact**: Querying page N requires N requests, which is problematic for large result sets
+- **Recommendations**:
+  - Use query conditions to narrow down result sets
+  - Avoid jumping to deep pages (e.g., directly querying page 1000)
+  - Consider full export for large data processing
+
+### 2. Dual API Design
+
+This project provides two usage patterns:
+
+**Static Helper API**:
+```java
+FsDwRecordHelper.queryRecords(TestTable.class);
+```
+- Pros: Concise, no injection needed
+- Cons: Hard to mock, not unit-test friendly
+
+**Service Bean API**:
+```java
+@Autowired
+private FsDwRecordService recordService;
+```
+- Pros: Testable, AOP-capable, multi-tenant support
+- Cons: Requires explicit injection
+
+**Recommendation**: Use Helper for simple projects, Service for complex/multi-tenant scenarios.
+
+### 3. Integration with Existing Forest Projects
+
+If your project already uses Forest with custom `@ForestScan`, ensure this project's API package is included:
+
+```java
+@ForestScan(basePackages = {
+    "your.project.forest.clients",
+    "cn.bdmcom.core.api"  // Must include
+})
+```
+
+### 4. Lambda Query Performance
+
+`DwLambdaQueryWrapper` uses reflection to parse Lambda expressions for field names:
+- First-time parsing has overhead; field name mappings are cached
+- Frequent Wrapper instance creation has some overhead
+- Consider reusing Wrapper instances or using string field names
+
+### 5. Token Cache Management
+
+Tokens are cached for 2 hours by default (with 60-second refresh buffer). Manual eviction:
+
+```java
+@Autowired
+private FsDwTokenService tokenService;
+
+// Evict specific token
+tokenService.evictToken(appId, appSecret);
+
+// Evict all tokens
+tokenService.evictAll();
+
+// Get cache statistics
+CacheStats stats = tokenService.getCacheStats();
+```
+
+### 6. Type Conversion Limitations
+
+Feishu Bitable field type to Java type mapping has limitations:
+- Date/Time: Auto-converted to `LocalDateTime`/`LocalDate`
+- Multi-select/Single-select: Returns text content or arrays
+- Complex nested structures may require manual handling
 
 ## Publishing (Maven Central)
 

@@ -1,9 +1,9 @@
 package cn.bdmcom.core.domain.res;
 
+import cn.bdmcom.core.domain.FieldDescription;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import cn.bdmcom.core.domain.FieldDescription;
 
 import java.util.Map;
 

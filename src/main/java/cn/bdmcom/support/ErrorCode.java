@@ -3,8 +3,6 @@ package cn.bdmcom.support;
 /**
  * 错误码<br>
  * 一共分为三种： 1）系统错误、2）用户级别错误、3）未预期到的错误
- *
- * @Date 2021-09-02 20:21:10
  */
 public interface ErrorCode {
 

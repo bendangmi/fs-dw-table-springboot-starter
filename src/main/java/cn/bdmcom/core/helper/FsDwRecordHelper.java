@@ -13,7 +13,6 @@ import cn.bdmcom.support.BitableErrorCode;
 import cn.bdmcom.support.BitableException;
 import cn.hutool.core.util.StrUtil;
 
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
@@ -43,18 +42,30 @@ public final class FsDwRecordHelper {
         PROPERTIES = properties;
     }
 
+    /**
+     * 新增记录（使用默认 appId/appSecret/appToken）。
+     */
     public static AddRecordRes addRecord(String appId, String appSecret, String appToken, String tableId, Map<String, Object> fields) {
         return requireService().addRecord(appId, appSecret, appToken, tableId, fields);
     }
 
+    /**
+     * 新增记录（使用默认 appId/appSecret/appToken）。
+     */
     public static AddRecordRes addRecord(String appId, String appSecret, String appToken, String tableId, Object payload) {
         return requireService().addRecord(appId, appSecret, appToken, tableId, payload);
     }
 
+    /**
+     * 新增记录（从实体注解读取 tableId）。
+     */
     public static AddRecordRes addRecord(String tableId, Map<String, Object> fields) {
         return addRecord(requireAppId(), requireAppSecret(), requireAppToken(), tableId, fields);
     }
 
+    /**
+     * 新增记录（从实体注解读取 tableId）。
+     */
     public static AddRecordRes addRecord(String tableId, Object payload) {
         return addRecord(requireAppId(), requireAppSecret(), requireAppToken(), tableId, payload);
     }
@@ -74,16 +85,26 @@ public final class FsDwRecordHelper {
         return batchCreateRecords(requireAppId(), requireAppSecret(), requireAppToken(), tableId, null, null, null, req);
     }
 
+    /**
+     * 批量新增记录（使用默认 appId/appSecret/appToken）。
+     */
     public static BatchCreateRecordRes batchCreateRecords(String tableId, String userIdType, String clientToken,
                                                           Boolean ignoreConsistencyCheck, BatchCreateRecordReq req) {
         return batchCreateRecords(requireAppId(), requireAppSecret(), requireAppToken(), tableId, userIdType, clientToken,
                 ignoreConsistencyCheck, req);
     }
 
+    /**
+     * 批量新增记录（使用默认 appId/appSecret/appToken）。
+     */
     public static BatchCreateRecordRes batchCreateRecords(String tableId, List<?> payloads) {
         return batchCreateRecords(tableId, buildBatchCreateRecordReq(payloads));
     }
 
+
+    /**
+     * 批量新增记录（从实体注解读取 tableId）。
+     */
     public static BatchCreateRecordRes batchCreateRecords(Class<?> entityClass, List<?> payloads) {
         String tableId = resolveTableMeta(entityClass).getTableId();
         return batchCreateRecords(tableId, payloads);
@@ -990,6 +1011,9 @@ public final class FsDwRecordHelper {
         return time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
+    /**
+     * 表格字段信息。
+     */
     private static final class TablePropertyInfo {
         private final String[] value;
         private final String field;

@@ -34,6 +34,15 @@ public class FsDwTableService {
     @Autowired
     private ObjectMapper objectMapper;
 
+    /**
+     * 新增数据表
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  应用令牌
+     * @param req       新增数据表请求
+     * @return 响应结果
+     */
     public CreateTableRes createTable(String appId, String appSecret, String appToken, CreateTableReq req) {
         BitableAssert.notNull(req, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]新增数据表请求不能为空");
         validateAppToken(appToken);
@@ -43,6 +52,15 @@ public class FsDwTableService {
         return result;
     }
 
+    /**
+     * 批量新增数据表
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  应用令牌
+     * @param req       批量新增数据表请求
+     * @return 响应结果
+     */
     public BatchCreateTableRes batchCreateTable(String appId, String appSecret, String appToken, BatchCreateTableReq req) {
         BitableAssert.notNull(req, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]批量新增数据表请求不能为空");
         validateAppToken(appToken);
@@ -52,6 +70,16 @@ public class FsDwTableService {
         return result;
     }
 
+    /**
+     * 更新数据表
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  应用令牌
+     * @param tableId   数据表ID
+     * @param req       更新数据表请求
+     * @return 响应结果
+     */
     public UpdateTableRes updateTable(String appId, String appSecret, String appToken, String tableId, UpdateTableReq req) {
         BitableAssert.notNull(req, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]更新数据表请求不能为空");
         validateAppToken(appToken);
@@ -62,6 +90,15 @@ public class FsDwTableService {
         return result;
     }
 
+    /**
+     * 删除数据表
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  应用令牌
+     * @param tableId   数据表ID
+     * @return 响应结果
+     */
     public DeleteTableRes deleteTable(String appId, String appSecret, String appToken, String tableId) {
         validateAppToken(appToken);
         validateTableId(tableId);
@@ -71,6 +108,15 @@ public class FsDwTableService {
         return result;
     }
 
+    /**
+     * 批量删除数据表
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  应用令牌
+     * @param req       批量删除数据表请求
+     * @return 响应结果
+     */
     public BatchDeleteTableRes batchDeleteTable(String appId, String appSecret, String appToken, BatchDeleteTableReq req) {
         BitableAssert.notNull(req, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]批量删除数据表请求不能为空");
         validateAppToken(appToken);
@@ -80,6 +126,16 @@ public class FsDwTableService {
         return result;
     }
 
+    /**
+     * 列出数据表
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  应用令牌
+     * @param pageSize  分页大小
+     * @param pageToken 分页标记
+     * @return 响应结果
+     */
     public ListTableRes listTables(String appId, String appSecret, String appToken, Integer pageSize, String pageToken) {
         validateAppToken(appToken);
         String res = fsDwTableApi.listTables(buildAuthorization(appId, appSecret), appToken, pageSize, pageToken);
@@ -88,20 +144,34 @@ public class FsDwTableService {
         return result;
     }
 
+    /**
+     * 构建授权信息
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @return 授权信息
+     */
     private String buildAuthorization(String appId, String appSecret) {
         String token = fsDwTokenService.getToken(appId, appSecret);
         BitableAssert.notBlank(token, BitableErrorCode.TOKEN_ACQUIRE_FAILED, "[飞书多维表格]token获取失败");
         return FsDwConstants.AUTHORIZATION_PREFIX + token;
     }
 
+    /**
+     * 解析响应结果
+     *
+     * @param action 操作名称
+     * @param res    响应结果
+     * @param clazz  响应结果类型
+     * @param <T>    响应结果类型
+     * @return 响应结果
+     */
     private <T> T parseResponse(String action, String res, Class<T> clazz) {
         BitableAssert.notBlank(res, BitableErrorCode.FEISHU_RESPONSE_EMPTY, "[飞书多维表格][{}]响应为空", action);
         try {
             T result = objectMapper.readValue(res, clazz);
             BitableAssert.notNull(result, BitableErrorCode.FEISHU_RESPONSE_PARSE_ERROR, "[飞书多维表格][{}]解析结果为空", action);
-            if (result instanceof AbstractRes) {
-                AbstractRes<?> abstractRes =
-                        (AbstractRes<?>) result;
+            if (result instanceof AbstractRes<?> abstractRes) {
                 BitableAssert.isTrue(SUCCESS_CODE.equals(abstractRes.getCode()), BitableErrorCode.FEISHU_API_ERROR,
                         "[飞书多维表格][{}]失败, code={}, msg={}", action, abstractRes.getCode(), abstractRes.getMsg());
             }
@@ -114,10 +184,20 @@ public class FsDwTableService {
         }
     }
 
+    /**
+     * 校验appToken
+     *
+     * @param appToken 应用凭证
+     */
     private void validateAppToken(String appToken) {
         BitableAssert.notBlank(appToken, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]appToken不能为空");
     }
 
+    /**
+     * 校验tableId
+     *
+     * @param tableId 数据表ID
+     */
     private void validateTableId(String tableId) {
         BitableAssert.notBlank(tableId, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]tableId不能为空");
     }

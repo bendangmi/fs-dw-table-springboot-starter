@@ -14,12 +14,25 @@ public class BitableException extends BusinessException {
     private final ErrorCode errorCode;
     private final String detailMessage;
 
+    /**
+     * 创建一个飞书多维表格异常。
+     *
+     * @param errorCode 错误码
+     * @param message   错误信息
+     */
     public BitableException(ErrorCode errorCode, String message) {
         super(buildMessage(errorCode, message));
         this.errorCode = errorCode;
         this.detailMessage = message;
     }
 
+    /**
+     * 创建一个飞书多维表格异常。
+     *
+     * @param errorCode 错误码
+     * @param message   错误信息
+     * @param cause     异常 cause
+     */
     public BitableException(ErrorCode errorCode, String message, Throwable cause) {
         super(buildMessage(errorCode, message), cause);
         this.errorCode = errorCode;

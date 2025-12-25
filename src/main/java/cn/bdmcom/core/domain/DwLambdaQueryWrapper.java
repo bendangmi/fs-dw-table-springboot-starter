@@ -83,7 +83,7 @@ public final class DwLambdaQueryWrapper<T> {
 
     @SafeVarargs
     public final DwLambdaQueryWrapper<T> select(SFunction<T, ?>... columns) {
-        if (columns == null || columns.length == 0) {
+        if (columns == null) {
             return this;
         }
         for (SFunction<T, ?> column : columns) {

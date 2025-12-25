@@ -27,19 +27,19 @@ public class AddRecordRes extends AbstractRes<AddRecordRes.RecordRes> {
         @Data
         @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Record {
-           /**
-            * 表格ID
-            */
-           private String id;
-           /**
-            * 记录ID
-            */
-           @JsonProperty("record_id")
-           private String recordId;
-           /**
-            * 字段
-            */
-           private Map<String, Object> fields;
-       }
+            /**
+             * 表格ID
+             */
+            private String id;
+            /**
+             * 记录ID
+             */
+            @JsonProperty("record_id")
+            private String recordId;
+            /**
+             * 字段
+             */
+            private Map<String, Object> fields;
+        }
     }
 }

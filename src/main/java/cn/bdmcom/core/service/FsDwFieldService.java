@@ -1,8 +1,5 @@
 package cn.bdmcom.core.service;
 
-import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import cn.bdmcom.core.api.FsDwFieldApi;
 import cn.bdmcom.core.domain.FsDwConstants;
 import cn.bdmcom.core.domain.req.AddFieldReq;
@@ -11,6 +8,9 @@ import cn.bdmcom.core.domain.res.*;
 import cn.bdmcom.support.BitableAssert;
 import cn.bdmcom.support.BitableErrorCode;
 import cn.bdmcom.support.BitableException;
+import cn.hutool.core.util.StrUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -106,12 +106,18 @@ public class FsDwFieldService {
         return result;
     }
 
+    /**
+     * 构建请求头中的授权信息。
+     */
     private String buildAuthorization(String appId, String appSecret) {
         String token = fsDwTokenService.getToken(appId, appSecret);
         BitableAssert.notBlank(token, BitableErrorCode.TOKEN_ACQUIRE_FAILED, "[飞书多维表格]token获取失败");
         return FsDwConstants.AUTHORIZATION_PREFIX + token;
     }
 
+    /**
+     * 解析飞书接口返回的 JSON 响应。
+     */
     private <T extends AbstractRes<?>> T parseResponse(String action, String res, Class<T> clazz) {
         BitableAssert.notBlank(res, BitableErrorCode.FEISHU_RESPONSE_EMPTY, "[飞书多维表格][{}]响应为空", action);
         try {
@@ -128,11 +134,17 @@ public class FsDwFieldService {
         }
     }
 
+    /**
+     * 校验表格信息。
+     */
     private void validateTableInfo(String appToken, String tableId) {
         BitableAssert.notBlank(appToken, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]appToken不能为空");
         BitableAssert.notBlank(tableId, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]tableId不能为空");
     }
 
+    /**
+     * 校验字段ID。
+     */
     private void validateFieldId(String fieldId) {
         BitableAssert.notBlank(fieldId, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]fieldId不能为空");
     }

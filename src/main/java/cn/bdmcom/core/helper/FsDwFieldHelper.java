@@ -1,7 +1,6 @@
 package cn.bdmcom.core.helper;
 
 
-
 import cn.bdmcom.config.FsDwProperties;
 import cn.bdmcom.core.domain.FsDwTable;
 import cn.bdmcom.core.domain.FsDwTableId;
@@ -277,8 +276,8 @@ public final class FsDwFieldHelper {
     /**
      * 通过字段名更新字段
      *
-     * @param tableClass 测试表实体类
-     * @param oldField 旧字段名
+     * @param tableClass     测试表实体类
+     * @param oldField       旧字段名
      * @param updateFieldReq 更新字段请求
      */
     public static UpdateFieldRes updateFieldByName(Class<?> tableClass, String oldField, UpdateFieldReq updateFieldReq) {
@@ -295,7 +294,7 @@ public final class FsDwFieldHelper {
     /**
      * 通过字段名删除字段
      *
-     * @param tableClass 测试表实体类
+     * @param tableClass  测试表实体类
      * @param deleteField 旧字段名
      */
     public static DeleteFieldRes deleteFieldByName(Class<?> tableClass, String deleteField) {

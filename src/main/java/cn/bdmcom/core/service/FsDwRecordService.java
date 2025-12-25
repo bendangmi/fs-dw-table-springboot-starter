@@ -63,10 +63,17 @@ public class FsDwRecordService {
         return result;
     }
 
+    /**
+     * 新增记录。
+     */
     public AddRecordRes addRecord(String appId, String appSecret, String appToken, String tableId, Map<String, Object> fields) {
         return addRecord(appId, appSecret, appToken, tableId, FsDwRecordHelper.buildAddRecordReq(fields));
     }
 
+
+    /**
+     * 新增记录。
+     */
     public AddRecordRes addRecord(String appId, String appSecret, String appToken, String tableId, Object payload) {
         return addRecord(appId, appSecret, appToken, tableId, FsDwRecordHelper.buildAddRecordReq(payload));
     }
@@ -117,10 +124,16 @@ public class FsDwRecordService {
         return result;
     }
 
+    /**
+     * 批量更新记录。
+     */
     public UpdateRecordRes updateRecord(String appId, String appSecret, String appToken, String tableId, String recordId, Map<String, Object> fields) {
         return updateRecord(appId, appSecret, appToken, tableId, recordId, FsDwRecordHelper.buildUpdateRecordReq(fields));
     }
 
+    /**
+     * 批量更新记录。
+     */
     public UpdateRecordRes updateRecord(String appId, String appSecret, String appToken, String tableId, String recordId, Object payload) {
         return updateRecord(appId, appSecret, appToken, tableId, recordId, FsDwRecordHelper.buildUpdateRecordReq(payload));
     }
@@ -238,12 +251,18 @@ public class FsDwRecordService {
         return result;
     }
 
+    /**
+     * 构建授权信息。
+     */
     private String buildAuthorization(String appId, String appSecret) {
         String token = fsDwTokenService.getToken(appId, appSecret);
         BitableAssert.notBlank(token, BitableErrorCode.TOKEN_ACQUIRE_FAILED, "[飞书多维表格]token获取失败");
         return FsDwConstants.AUTHORIZATION_PREFIX + token;
     }
 
+    /**
+     * 校验表格信息。
+     */
     private <T extends AbstractRes<?>> T parseResponse(String action, String res, Class<T> clazz) {
         BitableAssert.notBlank(res, BitableErrorCode.FEISHU_RESPONSE_EMPTY, "[飞书多维表格][{}]响应为空", action);
         try {
@@ -260,15 +279,24 @@ public class FsDwRecordService {
         }
     }
 
+    /**
+     * 校验表格信息。
+     */
     private void validateTableInfo(String appToken, String tableId) {
         BitableAssert.notBlank(appToken, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]appToken不能为空");
         BitableAssert.notBlank(tableId, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]tableId不能为空");
     }
 
+    /**
+     * 校验记录 ID。
+     */
     private void validateRecordId(String recordId) {
         BitableAssert.notBlank(recordId, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]recordId不能为空");
     }
 
+    /**
+     * 批量创建记录。
+     */
     private void validateBatchCreateRecords(BatchCreateRecordReq req) {
         if (req == null || req.getRecords() == null) {
             return;
@@ -279,6 +307,9 @@ public class FsDwRecordService {
         }
     }
 
+    /**
+     * 批量更新记录。
+     */
     private void validateBatchUpdateRecords(BatchUpdateRecordReq req) {
         if (req == null || req.getRecords() == null) {
             return;
@@ -290,6 +321,9 @@ public class FsDwRecordService {
         }
     }
 
+    /**
+     * 执行查询记录请求。
+     */
     private String executeQueryRecordRequest(String appId, String appSecret, String appToken, String tableId,
                                              QueryRecordReq req, String pageToken, Integer pageSize) {
         HttpUrl baseUrl = HttpUrl.parse(FsDwConstants.OPEN_API_PREFIX);
@@ -336,6 +370,17 @@ public class FsDwRecordService {
         }
     }
 
+    /**
+     * 按页查询记录
+     *
+     * @param appId     应用 ID
+     * @param appSecret 应用密钥
+     * @param appToken  应用令牌
+     * @param tableId   表格 ID
+     * @param req       查询条件
+     * @param pageNo    页码
+     * @return 查询结果
+     */
     private QueryRecordRes queryRecordByPage(String appId, String appSecret, String appToken, String tableId,
                                              QueryRecordReq req, int pageNo) {
         int pageSize = req.getPageSize() == null ? DEFAULT_PAGE_SIZE : req.getPageSize();
@@ -357,6 +402,12 @@ public class FsDwRecordService {
         return buildEmptyQueryRecordRes(lastRes);
     }
 
+    /**
+     * 构建空的查询记录响应
+     *
+     * @param lastRes 最后一次查询记录响应
+     * @return 空的查询记录响应
+     */
     private QueryRecordRes buildEmptyQueryRecordRes(QueryRecordRes lastRes) {
         QueryRecordRes empty = new QueryRecordRes();
         empty.setCode(SUCCESS_CODE);
@@ -371,6 +422,12 @@ public class FsDwRecordService {
         return empty;
     }
 
+    /**
+     * 构建查询记录请求体
+     *
+     * @param req 查询记录请求参数
+     * @return 查询记录请求体
+     */
     private QueryRecordReq buildQueryRecordBody(QueryRecordReq req) {
         QueryRecordReq bodyReq = new QueryRecordReq();
         bodyReq.setViewId(req.getViewId());

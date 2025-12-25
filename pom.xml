@@ -39,6 +39,7 @@
         <forest.version>1.7.1</forest.version>
         <hutool.version>5.8.27</hutool.version>
         <okhttp.version>4.12.0</okhttp.version>
+        <caffeine.version>3.1.8</caffeine.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
@@ -73,6 +74,11 @@
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
             <version>${okhttp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>${caffeine.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
