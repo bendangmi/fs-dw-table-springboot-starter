@@ -6,6 +6,10 @@ consumers can add a dependency, set configuration, enable the starter with
 @EnableFsDwTable, and start calling APIs like they would with a database.
 Chinese version: `README.md`.
 
+Project links:
+- Gitee: https://gitee.com/bdmcom/fs-dw-table-springboot-starter
+- GitHub: https://github.com/bendangmi/fs-dw-table-springboot-starter
+
 ## Vision
 
 - Use Feishu Bitable as a data source and offer database-like CRUD operations

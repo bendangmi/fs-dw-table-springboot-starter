@@ -4,6 +4,10 @@
 引入依赖、配置参数并在启动类上添加 @EnableFsDwTable 后即可调用接口，像使用数据库一样使用飞书多维表格。
 英文文档见 `README_EN.md`。
 
+项目地址：
+- Gitee: https://gitee.com/bdmcom/fs-dw-table-springboot-starter
+- GitHub: https://github.com/bendangmi/fs-dw-table-springboot-starter
+
 ## 项目愿景
 
 - 将飞书多维表格作为数据源，像操作 MySQL 等数据库一样完成数据 CRUD
