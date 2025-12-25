@@ -12,29 +12,26 @@ import cn.bdmcom.support.BitableErrorCode;
 import cn.bdmcom.support.BitableException;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 飞书多维表格数据表服务。
  *
  * <p>提供数据表级别 CRUD 与列表查询封装。</p>
  */
-@Service
 @Slf4j
 public class FsDwTableService {
 
     private static final Integer SUCCESS_CODE = 0;
 
-    @Resource
+    @Autowired
     private FsDwTokenService fsDwTokenService;
 
-    @Resource
+    @Autowired
     private FsDwTableApi fsDwTableApi;
 
-    @Resource
+    @Autowired
     private ObjectMapper objectMapper;
 
     public CreateTableRes createTable(String appId, String appSecret, String appToken, CreateTableReq req) {

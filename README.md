@@ -2,7 +2,7 @@
 
 飞书多维表格（DuoWeiTable）Spring Boot Starter，提供请求/响应模型、实体映射助手与自动配置。
 引入依赖、配置参数并在启动类上添加 @EnableFsDwTable 后即可调用接口，像使用数据库一样使用飞书多维表格。
-英文文档见 `REAMDE_EN.md`。
+英文文档见 `README_EN.md`。
 
 ## 项目愿景
 
@@ -93,7 +93,7 @@ forest:
 
 1) 引入依赖  
 2) 配置参数  
-3) 启动类加注解（不加注解不会加载 Starter）
+3) 启动类加注解（不加注解不会加载 Starter，已禁用 AutoConfiguration.imports 自动装配）
 
 ```java
 import cn.bdmcom.annotation.EnableFsDwTable;
@@ -215,7 +215,7 @@ DeleteFieldRes deleted = FsDwFieldHelper.deleteFieldByName(TestTable.class, "New
 ```java
 @Service
 public class DemoService {
-  @Resource
+  @Autowired
   private FsDwRecordService recordService;
 
   public QueryRecordRes query(String appId, String appSecret, String appToken, String tableId, QueryRecordReq req) {

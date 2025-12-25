@@ -97,6 +97,8 @@ forest:
 2) Configure properties  
 3) Add the annotation on your Spring Boot application class
 
+AutoConfiguration.imports auto-enable is intentionally disabled.
+
 ```java
 import cn.bdmcom.annotation.EnableFsDwTable;
 import org.springframework.boot.SpringApplication;
@@ -217,7 +219,7 @@ If you prefer Spring-managed services:
 ```java
 @Service
 public class DemoService {
-  @Resource
+  @Autowired
   private FsDwRecordService recordService;
 
   public QueryRecordRes query(String appId, String appSecret, String appToken, String tableId, QueryRecordReq req) {

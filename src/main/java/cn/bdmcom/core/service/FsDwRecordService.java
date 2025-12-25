@@ -10,10 +10,9 @@ import cn.bdmcom.support.BitableErrorCode;
 import cn.bdmcom.support.BitableException;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +23,6 @@ import java.util.Map;
  *
  * <p>提供记录级别 CRUD 与查询封装，隐藏鉴权和响应解析细节。</p>
  */
-@Service
 @Slf4j
 public class FsDwRecordService {
 
@@ -36,13 +34,13 @@ public class FsDwRecordService {
     private static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
     private static final OkHttpClient OK_HTTP_CLIENT = new OkHttpClient();
 
-    @Resource
+    @Autowired
     private FsDwTokenService fsDwTokenService;
 
-    @Resource
+    @Autowired
     private FsDwRecordApi fsDwRecordApi;
 
-    @Resource
+    @Autowired
     private ObjectMapper objectMapper;
 
     /**

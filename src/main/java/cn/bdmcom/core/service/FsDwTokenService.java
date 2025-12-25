@@ -2,7 +2,6 @@ package cn.bdmcom.core.service;
 
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import cn.bdmcom.core.api.FsDwRecordApi;
 import cn.bdmcom.core.domain.ExpiringHashMap;
@@ -11,14 +10,13 @@ import cn.bdmcom.core.domain.res.QueryTokenRes;
 import cn.bdmcom.support.BitableAssert;
 import cn.bdmcom.support.BitableErrorCode;
 import cn.bdmcom.support.BitableException;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 飞书多维表格 Token 服务。
  *
  * <p>负责拉取 app_access_token 并在内存中做短期缓存，避免频繁请求。</p>
  */
-@Service
 @Slf4j
 public class FsDwTokenService {
 
@@ -27,10 +25,10 @@ public class FsDwTokenService {
      */
     private static final Integer SUCCESS_CODE = 0;
 
-    @Resource
+    @Autowired
     private FsDwRecordApi fsDwRecordApi;
 
-    @Resource
+    @Autowired
     private ObjectMapper objectMapper;
 
     /**

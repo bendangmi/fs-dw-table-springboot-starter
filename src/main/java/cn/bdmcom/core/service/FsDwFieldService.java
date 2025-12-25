@@ -2,7 +2,6 @@ package cn.bdmcom.core.service;
 
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import cn.bdmcom.core.api.FsDwFieldApi;
 import cn.bdmcom.core.domain.FsDwConstants;
@@ -12,7 +11,7 @@ import cn.bdmcom.core.domain.res.*;
 import cn.bdmcom.support.BitableAssert;
 import cn.bdmcom.support.BitableErrorCode;
 import cn.bdmcom.support.BitableException;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,6 @@ import java.util.List;
  *
  * <p>提供字段级别 CRUD 与列表查询封装。</p>
  */
-@Service
 @Slf4j
 public class FsDwFieldService {
 
@@ -31,13 +29,13 @@ public class FsDwFieldService {
      */
     private static final Integer SUCCESS_CODE = 0;
 
-    @Resource
+    @Autowired
     private FsDwTokenService fsDwTokenService;
 
-    @Resource
+    @Autowired
     private FsDwFieldApi fsDwFieldApi;
 
-    @Resource
+    @Autowired
     private ObjectMapper objectMapper;
 
     /**
