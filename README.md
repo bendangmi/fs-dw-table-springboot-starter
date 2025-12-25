@@ -109,6 +109,24 @@ public class DemoApplication {
 }
 ```
 
+## 注意事项（已使用 Forest 的项目）
+
+如果你的项目已经使用了 Forest，并且自己加了 `@ForestScan`，请把 `cn.bdmcom.core.api` 加到
+`basePackages`，否则 Starter 的接口不会被扫描到：
+
+```java
+import com.dtflys.forest.springboot.annotation.ForestScan;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ForestScan(basePackages = {
+  "your.project.forest.clients",
+  "cn.bdmcom.core.api"
+})
+public class ForestClientConfig {
+}
+```
+
 ## 快速开始
 
 ### 1) 定义实体

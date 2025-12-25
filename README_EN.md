@@ -113,6 +113,25 @@ public class DemoApplication {
 }
 ```
 
+## Note (projects already using Forest)
+
+If your project already uses Forest and defines its own `@ForestScan`, make sure
+to include `cn.bdmcom.core.api` in `basePackages`, otherwise the starter clients
+will not be registered:
+
+```java
+import com.dtflys.forest.springboot.annotation.ForestScan;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ForestScan(basePackages = {
+  "your.project.forest.clients",
+  "cn.bdmcom.core.api"
+})
+public class ForestClientConfig {
+}
+```
+
 ## Quick Start
 
 ### 1) Define an entity
