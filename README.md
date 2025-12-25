@@ -1,7 +1,7 @@
 # Feishu Bitable Spring Boot Starter
 
 飞书多维表格（DuoWeiTable）Spring Boot Starter，提供请求/响应模型、实体映射助手与自动配置。
-引入依赖、配置参数后即可调用接口，像使用数据库一样使用飞书多维表格。
+引入依赖、配置参数并在启动类上添加 @EnableFsDwTable 后即可调用接口，像使用数据库一样使用飞书多维表格。
 英文文档见 `REAMDE_EN.md`。
 
 ## 项目愿景
@@ -18,7 +18,7 @@
 
 ## 项目亮点
 
-- Spring Boot 自动配置 + Forest 扫描，依赖即用
+- 通过 @EnableFsDwTable 显式启用自动配置 + Forest 扫描，避免与其他实现冲突
 - 注解驱动实体映射（`@FsDwTable` / `@FsDwTableProperty` / `@FsDwTableId`），支持元字段读取
 - `DwLambdaQueryWrapper` 提供 MyBatis-Plus 风格的条件、排序、分页与字段选择
 - 记录/表/字段多层级 Helper 与 Service 组合，兼顾简单调用与可扩展集成
@@ -27,7 +27,7 @@
 
 ## 功能特性
 
-- 自动配置并扫描 Forest HTTP 客户端
+- 启用注解后自动配置并扫描 Forest HTTP 客户端
 - 注解驱动实体映射（`@FsDwTable` / `@FsDwTableProperty` / `@FsDwTableId`），支持元字段映射
 - 类数据库的 CRUD 体验，屏蔽飞书多维表格底层调用
 - MyBatis-Plus 风格查询，`DwLambdaQueryWrapper` 条件构造
@@ -87,6 +87,26 @@ forest:
   connect-timeout: 5000
   read-timeout: 5000
   max-retry-count: 0
+```
+
+## 启用方式（3 步）
+
+1) 引入依赖  
+2) 配置参数  
+3) 启动类加注解（不加注解不会加载 Starter）
+
+```java
+import cn.bdmcom.annotation.EnableFsDwTable;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+@EnableFsDwTable
+public class DemoApplication {
+  public static void main(String[] args) {
+    SpringApplication.run(DemoApplication.class, args);
+  }
+}
 ```
 
 ## 快速开始

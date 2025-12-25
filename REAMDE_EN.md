@@ -2,8 +2,8 @@
 
 Spring Boot starter for Feishu Bitable (DuoWeiTable) APIs. It provides typed
 request/response models, entity mapping helpers, and auto-configuration so
-consumers can add a dependency, set configuration, and start calling APIs like
-they would with a database.
+consumers can add a dependency, set configuration, enable the starter with
+@EnableFsDwTable, and start calling APIs like they would with a database.
 Chinese version: `README.md`.
 
 ## Vision
@@ -20,7 +20,8 @@ Chinese version: `README.md`.
 
 ## Highlights
 
-- Spring Boot auto-configuration with Forest client scanning
+- Explicit enablement via @EnableFsDwTable to avoid conflicts with other
+  implementations
 - Annotation-driven entity mapping (`@FsDwTable` / `@FsDwTableProperty` / `@FsDwTableId`)
 - `DwLambdaQueryWrapper` for conditions, sorting, pagination, and field selection
 - Layered Helper + Service APIs for quick use and extensible integration
@@ -29,7 +30,7 @@ Chinese version: `README.md`.
 
 ## Features
 
-- Auto-configuration with `@ForestScan` for API clients
+- Auto-configuration with `@ForestScan` for API clients (enabled by annotation)
 - Annotation-driven entity mapping (`@FsDwTable` / `@FsDwTableProperty` / `@FsDwTableId`)
 - Database-like CRUD and MyBatis-Plus-style queries with `DwLambdaQueryWrapper`
 - Helper APIs for record, table, and field operations
@@ -88,6 +89,26 @@ forest:
   connect-timeout: 5000
   read-timeout: 5000
   max-retry-count: 0
+```
+
+## Enablement (3 steps)
+
+1) Add dependency  
+2) Configure properties  
+3) Add the annotation on your Spring Boot application class
+
+```java
+import cn.bdmcom.annotation.EnableFsDwTable;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+@EnableFsDwTable
+public class DemoApplication {
+  public static void main(String[] args) {
+    SpringApplication.run(DemoApplication.class, args);
+  }
+}
 ```
 
 ## Quick Start
