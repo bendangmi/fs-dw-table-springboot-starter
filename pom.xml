@@ -10,7 +10,7 @@
     </parent>
     <groupId>cn.bdmcom</groupId>
     <artifactId>fs-dw-table-springboot-starter</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <name>Feishu Bitable Spring Boot Starter</name>
     <description>Spring Boot starter for Feishu Bitable (DuoWeiTable) APIs.</description>
     <url>https://github.com/bendangmi/fs-dw-table-springboot-starter</url>
