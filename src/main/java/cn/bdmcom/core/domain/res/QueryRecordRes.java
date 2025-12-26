@@ -16,6 +16,9 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class QueryRecordRes extends AbstractRes<QueryRecordRes.RecordRes> {
 
+    /**
+     * 查询记录返回数据。
+     */
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class RecordRes {
@@ -42,6 +45,9 @@ public class QueryRecordRes extends AbstractRes<QueryRecordRes.RecordRes> {
          */
         private List<Item> items;
 
+        /**
+         * 记录条目。
+         */
         @Data
         @JsonIgnoreProperties(ignoreUnknown = true)
         public static class Item {

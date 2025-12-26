@@ -12,6 +12,9 @@ import lombok.EqualsAndHashCode;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UpdateTableRes extends AbstractRes<UpdateTableRes.UpdateTableData> {
 
+    /**
+     * 更新数据表返回数据。
+     */
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class UpdateTableData {

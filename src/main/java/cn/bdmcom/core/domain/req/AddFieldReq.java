@@ -41,6 +41,12 @@ public class AddFieldReq {
     @JsonProperty("ui_type")
     private String uiType;
 
+    /**
+     * 构造新增字段请求体。
+     *
+     * @param fieldName 字段名称
+     * @param typeEnum  字段类型枚举
+     */
     public AddFieldReq(String fieldName, TypeEnum typeEnum) {
         this.fieldName = fieldName;
         this.type = typeEnum.getType();

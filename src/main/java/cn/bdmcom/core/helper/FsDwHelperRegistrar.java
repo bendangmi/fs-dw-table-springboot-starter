@@ -26,6 +26,9 @@ public class FsDwHelperRegistrar {
     @Autowired
     private FsDwTableService fsDwTableService;
 
+    /**
+     * 注册辅助类所需的服务与配置。
+     */
     @PostConstruct
     public void register() {
         FsDwRecordHelper.registerServices(fsDwRecordService);

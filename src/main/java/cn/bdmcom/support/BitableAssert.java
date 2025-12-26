@@ -12,6 +12,9 @@ import java.util.Map;
  */
 public final class BitableAssert {
 
+    /**
+     * 工具类构造器。
+     */
     private BitableAssert() {
     }
 

@@ -15,6 +15,9 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ListTableRes extends AbstractRes<ListTableRes.TableListData> {
 
+    /**
+     * 数据表列表返回数据。
+     */
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TableListData {
@@ -29,6 +32,9 @@ public class ListTableRes extends AbstractRes<ListTableRes.TableListData> {
         private List<TableItem> items;
     }
 
+    /**
+     * 数据表简要信息。
+     */
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class TableItem {

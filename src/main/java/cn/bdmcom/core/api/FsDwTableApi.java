@@ -15,6 +15,11 @@ public interface FsDwTableApi {
 
     /**
      * 新增数据表。
+     *
+     * @param token    授权 token
+     * @param appToken 多维表格 App 的唯一标识
+     * @param req      新增数据表请求体
+     * @return 接口响应 JSON 字符串
      */
     @Post(url = FsDwConstants.TABLES_URL,
             headers = {
@@ -27,6 +32,11 @@ public interface FsDwTableApi {
 
     /**
      * 批量新增数据表。
+     *
+     * @param token    授权 token
+     * @param appToken 多维表格 App 的唯一标识
+     * @param req      批量新增数据表请求体
+     * @return 接口响应 JSON 字符串
      */
     @Post(url = FsDwConstants.TABLES_BATCH_CREATE_URL,
             headers = {
@@ -39,6 +49,12 @@ public interface FsDwTableApi {
 
     /**
      * 更新数据表名称。
+     *
+     * @param token    授权 token
+     * @param appToken 多维表格 App 的唯一标识
+     * @param tableId  数据表唯一标识
+     * @param req      更新数据表请求体
+     * @return 接口响应 JSON 字符串
      */
     @Patch(url = FsDwConstants.TABLE_URL,
             headers = {
@@ -52,6 +68,11 @@ public interface FsDwTableApi {
 
     /**
      * 删除数据表。
+     *
+     * @param token    授权 token
+     * @param appToken 多维表格 App 的唯一标识
+     * @param tableId  数据表唯一标识
+     * @return 接口响应 JSON 字符串
      */
     @Delete(url = FsDwConstants.TABLE_URL,
             headers = {
@@ -64,6 +85,11 @@ public interface FsDwTableApi {
 
     /**
      * 批量删除数据表。
+     *
+     * @param token    授权 token
+     * @param appToken 多维表格 App 的唯一标识
+     * @param req      批量删除数据表请求体
+     * @return 接口响应 JSON 字符串
      */
     @Post(url = FsDwConstants.TABLES_BATCH_DELETE_URL,
             headers = {
@@ -76,6 +102,12 @@ public interface FsDwTableApi {
 
     /**
      * 列出数据表。
+     *
+     * @param token     授权 token
+     * @param appToken  多维表格 App 的唯一标识
+     * @param pageSize  分页大小
+     * @param pageToken 分页 token
+     * @return 接口响应 JSON 字符串
      */
     @Get(url = FsDwConstants.TABLES_URL)
     String listTables(@Header("Authorization") String token,

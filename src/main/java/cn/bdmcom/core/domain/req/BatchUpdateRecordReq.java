@@ -17,6 +17,9 @@ public class BatchUpdateRecordReq {
      */
     private List<Record> records;
 
+    /**
+     * 批量更新记录项。
+     */
     @Data
     public static class Record {
         /**

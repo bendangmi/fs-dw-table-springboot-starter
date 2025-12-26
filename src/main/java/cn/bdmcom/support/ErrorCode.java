@@ -22,17 +22,23 @@ public interface ErrorCode {
     String LEVEL_UNEXPECTED = "unexpected";
 
     /**
-     * 错误码
+     * 获取错误码。
+     *
+     * @return 错误码
      */
     int getCode();
 
     /**
-     * 错误消息
+     * 获取错误消息。
+     *
+     * @return 错误消息
      */
     String getMsg();
 
     /**
-     * 错误等级
+     * 获取错误等级。
+     *
+     * @return 错误等级
      */
     String getLevel();
 

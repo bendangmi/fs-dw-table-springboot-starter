@@ -13,6 +13,9 @@ import lombok.EqualsAndHashCode;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeleteRecordRes extends AbstractRes<DeleteRecordRes.RecordRes> {
 
+    /**
+     * 删除记录返回数据。
+     */
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class RecordRes {

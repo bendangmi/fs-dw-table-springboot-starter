@@ -12,6 +12,9 @@ import lombok.EqualsAndHashCode;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AddFieldRes extends AbstractRes<AddFieldRes.FieldData> {
 
+    /**
+     * 新增字段返回数据。
+     */
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class FieldData {

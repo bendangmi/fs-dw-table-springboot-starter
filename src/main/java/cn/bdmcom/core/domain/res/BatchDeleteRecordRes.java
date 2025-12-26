@@ -15,6 +15,9 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BatchDeleteRecordRes extends AbstractRes<BatchDeleteRecordRes.BatchDeleteData> {
 
+    /**
+     * 批量删除记录返回数据。
+     */
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class BatchDeleteData {
@@ -24,6 +27,9 @@ public class BatchDeleteRecordRes extends AbstractRes<BatchDeleteRecordRes.Batch
         private List<DeleteRecord> records;
     }
 
+    /**
+     * 删除记录结果。
+     */
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class DeleteRecord {

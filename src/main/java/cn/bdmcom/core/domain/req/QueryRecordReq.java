@@ -61,6 +61,9 @@ public class QueryRecordReq {
     private Integer pageSize;
 
 
+    /**
+     * 排序条件。
+     */
     @Data
     public static class Sort {
         /**
@@ -74,6 +77,9 @@ public class QueryRecordReq {
         private Boolean desc;
     }
 
+    /**
+     * 过滤条件树。
+     */
     @Data
     public static class Filter {
         /**
@@ -92,6 +98,9 @@ public class QueryRecordReq {
         private List<Filter> children;
 
 
+        /**
+         * 过滤条件项。
+         */
         @Data
         public static class Condition {
             /**

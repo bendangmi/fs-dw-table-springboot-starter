@@ -15,6 +15,9 @@ public class BatchCreateTableReq {
      */
     private List<Table> tables;
 
+    /**
+     * 批量创建数据表项。
+     */
     @Data
     public static class Table {
         /**

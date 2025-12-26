@@ -65,6 +65,13 @@ public class FsDwRecordService {
 
     /**
      * 新增记录。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   多维表格数据表的唯一标识
+     * @param fields    字段值集合
+     * @return 新增结果
      */
     public AddRecordRes addRecord(String appId, String appSecret, String appToken, String tableId, Map<String, Object> fields) {
         return addRecord(appId, appSecret, appToken, tableId, FsDwRecordHelper.buildAddRecordReq(fields));
@@ -73,6 +80,13 @@ public class FsDwRecordService {
 
     /**
      * 新增记录。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   多维表格数据表的唯一标识
+     * @param payload   记录字段实体
+     * @return 新增结果
      */
     public AddRecordRes addRecord(String appId, String appSecret, String appToken, String tableId, Object payload) {
         return addRecord(appId, appSecret, appToken, tableId, FsDwRecordHelper.buildAddRecordReq(payload));
@@ -80,6 +94,13 @@ public class FsDwRecordService {
 
     /**
      * 批量新增记录。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   多维表格数据表的唯一标识
+     * @param req       批量新增记录请求体
+     * @return 批量新增结果
      */
     public BatchCreateRecordRes batchCreateRecord(String appId, String appSecret, String appToken, String tableId, BatchCreateRecordReq req) {
         return batchCreateRecord(appId, appSecret, appToken, tableId, null, null, null, req);
@@ -87,6 +108,16 @@ public class FsDwRecordService {
 
     /**
      * 批量新增记录。
+     *
+     * @param appId                   应用ID
+     * @param appSecret               应用密钥
+     * @param appToken                多维表格 App 的唯一标识
+     * @param tableId                 多维表格数据表的唯一标识
+     * @param userIdType              用户 ID 类型
+     * @param clientToken             幂等请求标识
+     * @param ignoreConsistencyCheck  是否忽略一致性校验
+     * @param req                     批量新增记录请求体
+     * @return 批量新增结果
      */
     public BatchCreateRecordRes batchCreateRecord(String appId, String appSecret, String appToken, String tableId,
                                                   String userIdType, String clientToken, Boolean ignoreConsistencyCheck,
@@ -126,6 +157,14 @@ public class FsDwRecordService {
 
     /**
      * 批量更新记录。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   多维表格数据表的唯一标识
+     * @param recordId  多维表格记录的唯一标识
+     * @param fields    字段值集合
+     * @return 更新结果
      */
     public UpdateRecordRes updateRecord(String appId, String appSecret, String appToken, String tableId, String recordId, Map<String, Object> fields) {
         return updateRecord(appId, appSecret, appToken, tableId, recordId, FsDwRecordHelper.buildUpdateRecordReq(fields));
@@ -133,6 +172,14 @@ public class FsDwRecordService {
 
     /**
      * 批量更新记录。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   多维表格数据表的唯一标识
+     * @param recordId  多维表格记录的唯一标识
+     * @param payload   记录字段实体
+     * @return 更新结果
      */
     public UpdateRecordRes updateRecord(String appId, String appSecret, String appToken, String tableId, String recordId, Object payload) {
         return updateRecord(appId, appSecret, appToken, tableId, recordId, FsDwRecordHelper.buildUpdateRecordReq(payload));
@@ -140,6 +187,13 @@ public class FsDwRecordService {
 
     /**
      * 批量更新记录。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   多维表格数据表的唯一标识
+     * @param req       批量更新记录请求体
+     * @return 批量更新结果
      */
     public BatchUpdateRecordRes batchUpdateRecord(String appId, String appSecret, String appToken, String tableId, BatchUpdateRecordReq req) {
         return batchUpdateRecord(appId, appSecret, appToken, tableId, null, null, req);
@@ -147,6 +201,15 @@ public class FsDwRecordService {
 
     /**
      * 批量更新记录。
+     *
+     * @param appId                  应用ID
+     * @param appSecret              应用密钥
+     * @param appToken               多维表格 App 的唯一标识
+     * @param tableId                多维表格数据表的唯一标识
+     * @param userIdType             用户 ID 类型
+     * @param ignoreConsistencyCheck 是否忽略一致性校验
+     * @param req                    批量更新记录请求体
+     * @return 批量更新结果
      */
     public BatchUpdateRecordRes batchUpdateRecord(String appId, String appSecret, String appToken, String tableId,
                                                   String userIdType, Boolean ignoreConsistencyCheck, BatchUpdateRecordReq req) {
@@ -227,6 +290,13 @@ public class FsDwRecordService {
 
     /**
      * 批量删除记录。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   多维表格数据表的唯一标识
+     * @param req       批量删除记录请求体
+     * @return 批量删除结果
      */
     public BatchDeleteRecordRes batchDeleteRecord(String appId, String appSecret, String appToken, String tableId, BatchDeleteRecordReq req) {
         BitableAssert.notNull(req, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]批量删除记录请求不能为空");
@@ -240,6 +310,13 @@ public class FsDwRecordService {
 
     /**
      * 批量获取记录。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   多维表格数据表的唯一标识
+     * @param req       批量获取记录请求体
+     * @return 批量获取结果
      */
     public BatchGetRecordRes batchGetRecord(String appId, String appSecret, String appToken, String tableId, BatchGetRecordReq req) {
         BitableAssert.notNull(req, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]批量获取记录请求不能为空");
@@ -253,6 +330,10 @@ public class FsDwRecordService {
 
     /**
      * 构建授权信息。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @return Authorization header 值
      */
     private String buildAuthorization(String appId, String appSecret) {
         String token = fsDwTokenService.getToken(appId, appSecret);
@@ -261,7 +342,13 @@ public class FsDwRecordService {
     }
 
     /**
-     * 校验表格信息。
+     * 解析飞书接口响应。
+     *
+     * @param action 操作名称
+     * @param res    接口响应 JSON 字符串
+     * @param clazz  响应类型
+     * @param <T>    响应类型
+     * @return 解析后的响应对象
      */
     private <T extends AbstractRes<?>> T parseResponse(String action, String res, Class<T> clazz) {
         BitableAssert.notBlank(res, BitableErrorCode.FEISHU_RESPONSE_EMPTY, "[飞书多维表格][{}]响应为空", action);
@@ -281,6 +368,9 @@ public class FsDwRecordService {
 
     /**
      * 校验表格信息。
+     *
+     * @param appToken 多维表格 App 的唯一标识
+     * @param tableId  多维表格数据表的唯一标识
      */
     private void validateTableInfo(String appToken, String tableId) {
         BitableAssert.notBlank(appToken, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]appToken不能为空");
@@ -289,6 +379,8 @@ public class FsDwRecordService {
 
     /**
      * 校验记录 ID。
+     *
+     * @param recordId 记录唯一标识
      */
     private void validateRecordId(String recordId) {
         BitableAssert.notBlank(recordId, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]recordId不能为空");
@@ -296,6 +388,8 @@ public class FsDwRecordService {
 
     /**
      * 批量创建记录。
+     *
+     * @param req 批量新增记录请求体
      */
     private void validateBatchCreateRecords(BatchCreateRecordReq req) {
         if (req == null || req.getRecords() == null) {
@@ -309,6 +403,8 @@ public class FsDwRecordService {
 
     /**
      * 批量更新记录。
+     *
+     * @param req 批量更新记录请求体
      */
     private void validateBatchUpdateRecords(BatchUpdateRecordReq req) {
         if (req == null || req.getRecords() == null) {
@@ -323,6 +419,15 @@ public class FsDwRecordService {
 
     /**
      * 执行查询记录请求。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   多维表格数据表的唯一标识
+     * @param req       查询记录请求体
+     * @param pageToken 分页 token
+     * @param pageSize  分页大小
+     * @return 接口响应 JSON 字符串
      */
     private String executeQueryRecordRequest(String appId, String appSecret, String appToken, String tableId,
                                              QueryRecordReq req, String pageToken, Integer pageSize) {

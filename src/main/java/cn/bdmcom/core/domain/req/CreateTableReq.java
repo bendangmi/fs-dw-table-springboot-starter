@@ -17,6 +17,9 @@ public class CreateTableReq {
      */
     private Table table;
 
+    /**
+     * 数据表定义。
+     */
     @Data
     public static class Table {
         /**
@@ -36,6 +39,9 @@ public class CreateTableReq {
         private List<Field> fields;
     }
 
+    /**
+     * 字段定义。
+     */
     @Data
     public static class Field {
         /**

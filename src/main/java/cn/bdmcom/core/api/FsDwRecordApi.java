@@ -14,6 +14,9 @@ public interface FsDwRecordApi {
 
     /**
      * 获取 App Access Token。
+     *
+     * @param req 获取 token 的请求体
+     * @return 接口响应 JSON 字符串
      */
     @Post(url = FsDwConstants.APP_ACCESS_TOKEN_URL,
             headers = {
@@ -25,6 +28,12 @@ public interface FsDwRecordApi {
 
     /**
      * 新增记录。
+     *
+     * @param token    授权 token
+     * @param appToken 多维表格 App 的唯一标识
+     * @param tableId  数据表唯一标识
+     * @param req      新增记录请求体
+     * @return 接口响应 JSON 字符串
      */
     @Post(url = FsDwConstants.RECORDS_URL,
             headers = {
@@ -38,6 +47,15 @@ public interface FsDwRecordApi {
 
     /**
      * 批量新增记录。
+     *
+     * @param token                   授权 token
+     * @param appToken                多维表格 App 的唯一标识
+     * @param tableId                 数据表唯一标识
+     * @param userIdType              用户 ID 类型
+     * @param clientToken             幂等请求标识
+     * @param ignoreConsistencyCheck  是否忽略一致性校验
+     * @param req                     批量新增记录请求体
+     * @return 接口响应 JSON 字符串
      */
     @Post(url = FsDwConstants.RECORDS_BATCH_CREATE_URL,
             headers = {
@@ -55,6 +73,13 @@ public interface FsDwRecordApi {
 
     /**
      * 更新记录。
+     *
+     * @param token    授权 token
+     * @param appToken 多维表格 App 的唯一标识
+     * @param tableId  数据表唯一标识
+     * @param recordId 记录唯一标识
+     * @param req      更新记录请求体
+     * @return 接口响应 JSON 字符串
      */
     @Put(url = FsDwConstants.RECORD_URL,
             headers = {
@@ -70,6 +95,14 @@ public interface FsDwRecordApi {
 
     /**
      * 批量更新记录。
+     *
+     * @param token                  授权 token
+     * @param appToken               多维表格 App 的唯一标识
+     * @param tableId                数据表唯一标识
+     * @param userIdType             用户 ID 类型
+     * @param ignoreConsistencyCheck 是否忽略一致性校验
+     * @param req                    批量更新记录请求体
+     * @return 接口响应 JSON 字符串
      */
     @Post(url = FsDwConstants.RECORDS_BATCH_UPDATE_URL,
             headers = {
@@ -86,6 +119,14 @@ public interface FsDwRecordApi {
 
     /**
      * 查询记录。
+     *
+     * @param token     授权 token
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   数据表唯一标识
+     * @param req       查询记录请求体
+     * @param pageToken 分页 token
+     * @param pageSize  分页大小
+     * @return 接口响应 JSON 字符串
      */
 
     @Post(url = FsDwConstants.RECORDS_SEARCH_URL,
@@ -104,6 +145,12 @@ public interface FsDwRecordApi {
 
     /**
      * 删除记录。
+     *
+     * @param token    授权 token
+     * @param appToken 多维表格 App 的唯一标识
+     * @param tableId  数据表唯一标识
+     * @param recordId 记录唯一标识
+     * @return 接口响应 JSON 字符串
      */
     @Delete(url = FsDwConstants.RECORD_URL,
             headers = {
@@ -118,6 +165,12 @@ public interface FsDwRecordApi {
 
     /**
      * 批量删除记录。
+     *
+     * @param token    授权 token
+     * @param appToken 多维表格 App 的唯一标识
+     * @param tableId  数据表唯一标识
+     * @param req      批量删除记录请求体
+     * @return 接口响应 JSON 字符串
      */
     @Post(url = FsDwConstants.RECORDS_BATCH_DELETE_URL,
             headers = {
@@ -132,6 +185,12 @@ public interface FsDwRecordApi {
 
     /**
      * 批量获取记录。
+     *
+     * @param token    授权 token
+     * @param appToken 多维表格 App 的唯一标识
+     * @param tableId  数据表唯一标识
+     * @param req      批量获取记录请求体
+     * @return 接口响应 JSON 字符串
      */
     @Post(url = FsDwConstants.RECORDS_BATCH_GET_URL,
             headers = {
@@ -146,6 +205,13 @@ public interface FsDwRecordApi {
 
     /**
      * 列出字段。
+     *
+     * @param token     授权 token
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   数据表唯一标识
+     * @param pageSize  分页大小
+     * @param pageToken 分页 token
+     * @return 接口响应 JSON 字符串
      */
     @Get(url = FsDwConstants.FIELDS_URL)
     String listFields(@Header("Authorization") String token,

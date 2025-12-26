@@ -28,22 +28,44 @@ public enum BitableErrorCode implements ErrorCode {
     private final String msg;
     private final String level;
 
+    /**
+     * 构造错误码枚举。
+     *
+     * @param code  错误码
+     * @param msg   错误消息
+     * @param level 错误等级
+     */
     BitableErrorCode(int code, String msg, String level) {
         this.code = code;
         this.msg = msg;
         this.level = level;
     }
 
+    /**
+     * 获取错误码。
+     *
+     * @return 错误码
+     */
     @Override
     public int getCode() {
         return code;
     }
 
+    /**
+     * 获取错误消息。
+     *
+     * @return 错误消息
+     */
     @Override
     public String getMsg() {
         return msg;
     }
 
+    /**
+     * 获取错误等级。
+     *
+     * @return 错误等级
+     */
     @Override
     public String getLevel() {
         return level;

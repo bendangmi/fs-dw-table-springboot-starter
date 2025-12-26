@@ -13,6 +13,13 @@ public interface FsDwFieldApi {
 
     /**
      * 新增字段。
+     *
+     * @param token       授权 token
+     * @param appToken    多维表格 App 的唯一标识
+     * @param tableId     数据表唯一标识
+     * @param clientToken 幂等请求标识
+     * @param req         新增字段请求体
+     * @return 接口响应 JSON 字符串
      */
     @Post(url = FsDwConstants.FIELDS_URL,
             headers = {
@@ -27,6 +34,13 @@ public interface FsDwFieldApi {
 
     /**
      * 更新字段。
+     *
+     * @param token    授权 token
+     * @param appToken 多维表格 App 的唯一标识
+     * @param tableId  数据表唯一标识
+     * @param fieldId  字段唯一标识
+     * @param req      更新字段请求体
+     * @return 接口响应 JSON 字符串
      */
     @Put(url = FsDwConstants.FIELD_URL,
             headers = {
@@ -41,6 +55,12 @@ public interface FsDwFieldApi {
 
     /**
      * 删除字段。
+     *
+     * @param token    授权 token
+     * @param appToken 多维表格 App 的唯一标识
+     * @param tableId  数据表唯一标识
+     * @param fieldId  字段唯一标识
+     * @return 接口响应 JSON 字符串
      */
     @Delete(url = FsDwConstants.FIELD_URL,
             headers = {
@@ -54,6 +74,14 @@ public interface FsDwFieldApi {
 
     /**
      * 列出字段。
+     *
+     * @param token     授权 token
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   数据表唯一标识
+     * @param viewId    视图 ID
+     * @param pageSize  分页大小
+     * @param pageToken 分页 token
+     * @return 接口响应 JSON 字符串
      */
     @Get(url = FsDwConstants.FIELDS_URL)
     String listFields(@Header("Authorization") String token,

@@ -40,6 +40,12 @@ public class UpdateFieldReq {
     @JsonProperty("ui_type")
     private String uiType;
 
+    /**
+     * 构造更新字段请求体。
+     *
+     * @param fieldName 字段名称
+     * @param typeEnum  字段类型枚举
+     */
     public UpdateFieldReq(String fieldName, TypeEnum typeEnum) {
         this.fieldName = fieldName;
         this.type = typeEnum.getType();

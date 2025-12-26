@@ -17,6 +17,9 @@ public class BatchCreateRecordReq {
      */
     private List<Record> records;
 
+    /**
+     * 批量新增记录项。
+     */
     @Data
     public static class Record {
         /**

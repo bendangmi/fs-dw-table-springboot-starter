@@ -50,6 +50,8 @@ public @interface FsDwTableProperty {
 
     /**
      * 枚举选项（如果type类型为多选或者单选，选项从options中获取）
+     *
+     * @return 枚举选项列表
      */
     String[] options() default {};
 }

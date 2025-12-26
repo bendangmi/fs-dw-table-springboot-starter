@@ -15,6 +15,9 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateTableRes extends AbstractRes<CreateTableRes.CreateTableData> {
 
+    /**
+     * 新增数据表返回数据。
+     */
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class CreateTableData {

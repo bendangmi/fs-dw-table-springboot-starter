@@ -5,6 +5,9 @@ package cn.bdmcom.core.domain;
  */
 public final class FsDwConstants {
 
+    /**
+     * 工具类构造器。
+     */
     private FsDwConstants() {
     }
 

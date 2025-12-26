@@ -41,6 +41,8 @@ public class BitableException extends BusinessException {
 
     /**
      * 错误码（无错误码时返回 0）。
+     *
+     * @return 错误码
      */
     public int getCode() {
         return errorCode == null ? 0 : errorCode.getCode();
@@ -48,6 +50,8 @@ public class BitableException extends BusinessException {
 
     /**
      * 错误等级（无错误码时返回 null）。
+     *
+     * @return 错误等级
      */
     public String getLevel() {
         return errorCode == null ? null : errorCode.getLevel();
@@ -55,11 +59,20 @@ public class BitableException extends BusinessException {
 
     /**
      * 标准错误信息（无错误码时返回 null）。
+     *
+     * @return 错误消息
      */
     public String getErrorMsg() {
         return errorCode == null ? null : errorCode.getMsg();
     }
 
+    /**
+     * 组装包含错误码的展示消息。
+     *
+     * @param errorCode 错误码
+     * @param message   原始消息
+     * @return 拼装后的消息
+     */
     private static String buildMessage(ErrorCode errorCode, String message) {
         if (errorCode == null) {
             return message;

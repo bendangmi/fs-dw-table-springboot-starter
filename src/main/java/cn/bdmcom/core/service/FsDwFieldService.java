@@ -40,6 +40,14 @@ public class FsDwFieldService {
 
     /**
      * 新增字段。
+     *
+     * @param appId       应用ID
+     * @param appSecret   应用密钥
+     * @param appToken    多维表格 App 的唯一标识
+     * @param tableId     数据表唯一标识
+     * @param clientToken 幂等请求标识
+     * @param req         新增字段请求体
+     * @return 新增字段结果
      */
     public AddFieldRes createField(String appId, String appSecret, String appToken, String tableId, String clientToken, AddFieldReq req) {
         BitableAssert.notNull(req, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]新增字段请求不能为空");
@@ -52,6 +60,14 @@ public class FsDwFieldService {
 
     /**
      * 更新字段。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   数据表唯一标识
+     * @param fieldId   字段唯一标识
+     * @param req       更新字段请求体
+     * @return 更新字段结果
      */
     public UpdateFieldRes updateField(String appId, String appSecret, String appToken, String tableId, String fieldId, UpdateFieldReq req) {
         BitableAssert.notNull(req, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]更新字段请求不能为空");
@@ -65,6 +81,13 @@ public class FsDwFieldService {
 
     /**
      * 删除字段。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   数据表唯一标识
+     * @param fieldId   字段唯一标识
+     * @return 删除字段结果
      */
     public DeleteFieldRes deleteField(String appId, String appSecret, String appToken, String tableId, String fieldId) {
         validateTableInfo(appToken, tableId);
@@ -77,6 +100,12 @@ public class FsDwFieldService {
 
     /**
      * 查询指定表格的所有字段（自动分页）。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   数据表唯一标识
+     * @return 字段列表
      */
     public List<TableFieldListRes.TableField> listFields(String appId, String appSecret, String appToken, String tableId) {
         return listFields(appId, appSecret, appToken, tableId, null);
@@ -84,6 +113,13 @@ public class FsDwFieldService {
 
     /**
      * 查询指定表格的所有字段（自动分页）。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   数据表唯一标识
+     * @param viewId    视图 ID
+     * @return 字段列表
      */
     public List<TableFieldListRes.TableField> listFields(String appId, String appSecret, String appToken, String tableId, String viewId) {
         validateTableInfo(appToken, tableId);
@@ -108,6 +144,10 @@ public class FsDwFieldService {
 
     /**
      * 构建请求头中的授权信息。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @return Authorization header 值
      */
     private String buildAuthorization(String appId, String appSecret) {
         String token = fsDwTokenService.getToken(appId, appSecret);
@@ -117,6 +157,12 @@ public class FsDwFieldService {
 
     /**
      * 解析飞书接口返回的 JSON 响应。
+     *
+     * @param action 操作名称
+     * @param res    接口响应 JSON 字符串
+     * @param clazz  响应类型
+     * @param <T>    响应类型
+     * @return 解析后的响应对象
      */
     private <T extends AbstractRes<?>> T parseResponse(String action, String res, Class<T> clazz) {
         BitableAssert.notBlank(res, BitableErrorCode.FEISHU_RESPONSE_EMPTY, "[飞书多维表格][{}]响应为空", action);
@@ -136,6 +182,9 @@ public class FsDwFieldService {
 
     /**
      * 校验表格信息。
+     *
+     * @param appToken 多维表格 App 的唯一标识
+     * @param tableId  数据表唯一标识
      */
     private void validateTableInfo(String appToken, String tableId) {
         BitableAssert.notBlank(appToken, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]appToken不能为空");
@@ -144,6 +193,8 @@ public class FsDwFieldService {
 
     /**
      * 校验字段ID。
+     *
+     * @param fieldId 字段唯一标识
      */
     private void validateFieldId(String fieldId) {
         BitableAssert.notBlank(fieldId, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]fieldId不能为空");

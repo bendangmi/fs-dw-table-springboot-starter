@@ -26,104 +26,235 @@ import java.util.*;
  */
 public final class FsDwFieldHelper {
 
+    private static volatile FsDwFieldService FIELD_SERVICE;
+    private static volatile FsDwProperties PROPERTIES;
+    /**
+     * 工具类构造器。
+     */
     private FsDwFieldHelper() {
     }
 
-    private static volatile FsDwFieldService FIELD_SERVICE;
-    private static volatile FsDwProperties PROPERTIES;
-
+    /**
+     * 注册字段服务。
+     *
+     * @param fieldService 字段服务
+     */
     public static void registerServices(FsDwFieldService fieldService) {
         FIELD_SERVICE = fieldService;
     }
 
+    /**
+     * 注册配置属性。
+     *
+     * @param properties 配置属性
+     */
     public static void registerProperties(FsDwProperties properties) {
         PROPERTIES = properties;
     }
 
     /**
      * 新增字段（默认 appId/appSecret/appToken）。
+     *
+     * @param tableId 数据表唯一标识
+     * @param req     新增字段请求体
+     * @return 新增字段结果
      */
     public static AddFieldRes createField(String tableId, AddFieldReq req) {
         return createField(requireAppId(), requireAppSecret(), requireAppToken(), tableId, null, req);
     }
 
+    /**
+     * 新增字段（默认 appId/appSecret/appToken）。
+     *
+     * @param tableId     数据表唯一标识
+     * @param clientToken 幂等请求标识
+     * @param req         新增字段请求体
+     * @return 新增字段结果
+     */
     public static AddFieldRes createField(String tableId, String clientToken, AddFieldReq req) {
         return createField(requireAppId(), requireAppSecret(), requireAppToken(), tableId, clientToken, req);
     }
 
+    /**
+     * 新增字段（基于实体注解解析表ID）。
+     *
+     * @param entityClass 实体类型
+     * @param req         新增字段请求体
+     * @return 新增字段结果
+     */
     public static AddFieldRes createField(Class<?> entityClass, AddFieldReq req) {
         String tableId = resolveTableId(entityClass);
         return createField(requireAppId(), requireAppSecret(), requireAppToken(), tableId, null, req);
     }
 
+    /**
+     * 新增字段（基于实体注解解析表ID）。
+     *
+     * @param entityClass 实体类型
+     * @param clientToken 幂等请求标识
+     * @param req         新增字段请求体
+     * @return 新增字段结果
+     */
     public static AddFieldRes createField(Class<?> entityClass, String clientToken, AddFieldReq req) {
         String tableId = resolveTableId(entityClass);
         return createField(requireAppId(), requireAppSecret(), requireAppToken(), tableId, clientToken, req);
     }
 
+    /**
+     * 新增字段（基于 appId/appSecret/appToken）。
+     *
+     * @param appId       应用ID
+     * @param appSecret   应用密钥
+     * @param appToken    多维表格 App 的唯一标识
+     * @param tableId     数据表唯一标识
+     * @param clientToken 幂等请求标识
+     * @param req         新增字段请求体
+     * @return 新增字段结果
+     */
     public static AddFieldRes createField(String appId, String appSecret, String appToken, String tableId, String clientToken, AddFieldReq req) {
         return requireService().createField(appId, appSecret, appToken, tableId, clientToken, req);
     }
 
     /**
      * 更新字段（默认 appId/appSecret/appToken）。
+     *
+     * @param tableId 数据表唯一标识
+     * @param fieldId 字段唯一标识
+     * @param req     更新字段请求体
+     * @return 更新字段结果
      */
     public static UpdateFieldRes updateField(String tableId, String fieldId, UpdateFieldReq req) {
         return updateField(requireAppId(), requireAppSecret(), requireAppToken(), tableId, fieldId, req);
     }
 
+    /**
+     * 更新字段（基于实体注解解析表ID）。
+     *
+     * @param entityClass 实体类型
+     * @param fieldId     字段唯一标识
+     * @param req         更新字段请求体
+     * @return 更新字段结果
+     */
     public static UpdateFieldRes updateField(Class<?> entityClass, String fieldId, UpdateFieldReq req) {
         String tableId = resolveTableId(entityClass);
         return updateField(requireAppId(), requireAppSecret(), requireAppToken(), tableId, fieldId, req);
     }
 
+    /**
+     * 更新字段（基于 appId/appSecret/appToken）。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   数据表唯一标识
+     * @param fieldId   字段唯一标识
+     * @param req       更新字段请求体
+     * @return 更新字段结果
+     */
     public static UpdateFieldRes updateField(String appId, String appSecret, String appToken, String tableId, String fieldId, UpdateFieldReq req) {
         return requireService().updateField(appId, appSecret, appToken, tableId, fieldId, req);
     }
 
     /**
      * 删除字段（默认 appId/appSecret/appToken）。
+     *
+     * @param tableId 数据表唯一标识
+     * @param fieldId 字段唯一标识
+     * @return 删除字段结果
      */
     public static DeleteFieldRes deleteField(String tableId, String fieldId) {
         return deleteField(requireAppId(), requireAppSecret(), requireAppToken(), tableId, fieldId);
     }
 
+    /**
+     * 删除字段（基于实体注解解析表ID）。
+     *
+     * @param entityClass 实体类型
+     * @param fieldId     字段唯一标识
+     * @return 删除字段结果
+     */
     public static DeleteFieldRes deleteField(Class<?> entityClass, String fieldId) {
         String tableId = resolveTableId(entityClass);
         return deleteField(requireAppId(), requireAppSecret(), requireAppToken(), tableId, fieldId);
     }
 
+    /**
+     * 删除字段（基于 appId/appSecret/appToken）。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   数据表唯一标识
+     * @param fieldId   字段唯一标识
+     * @return 删除字段结果
+     */
     public static DeleteFieldRes deleteField(String appId, String appSecret, String appToken, String tableId, String fieldId) {
         return requireService().deleteField(appId, appSecret, appToken, tableId, fieldId);
     }
 
     /**
      * 查询数据表字段列表（默认 appId/appSecret/appToken）。
+     *
+     * @param tableId 数据表唯一标识
+     * @return 字段列表
      */
     public static List<TableFieldListRes.TableField> listFields(String tableId) {
         return listFields(requireAppId(), requireAppSecret(), requireAppToken(), tableId, null);
     }
 
+    /**
+     * 查询数据表字段列表（默认 appId/appSecret/appToken）。
+     *
+     * @param tableId 数据表唯一标识
+     * @param viewId  视图 ID
+     * @return 字段列表
+     */
     public static List<TableFieldListRes.TableField> listFields(String tableId, String viewId) {
         return listFields(requireAppId(), requireAppSecret(), requireAppToken(), tableId, viewId);
     }
 
+    /**
+     * 查询数据表字段列表（基于实体注解解析表ID）。
+     *
+     * @param entityClass 实体类型
+     * @return 字段列表
+     */
     public static List<TableFieldListRes.TableField> listFields(Class<?> entityClass) {
         String tableId = resolveTableId(entityClass);
         return listFields(requireAppId(), requireAppSecret(), requireAppToken(), tableId, null);
     }
 
+    /**
+     * 查询数据表字段列表（基于实体注解解析表ID）。
+     *
+     * @param entityClass 实体类型
+     * @param viewId      视图 ID
+     * @return 字段列表
+     */
     public static List<TableFieldListRes.TableField> listFields(Class<?> entityClass, String viewId) {
         String tableId = resolveTableId(entityClass);
         return listFields(requireAppId(), requireAppSecret(), requireAppToken(), tableId, viewId);
     }
 
+    /**
+     * 查询数据表字段列表（基于 appId/appSecret/appToken）。
+     *
+     * @param appId     应用ID
+     * @param appSecret 应用密钥
+     * @param appToken  多维表格 App 的唯一标识
+     * @param tableId   数据表唯一标识
+     * @param viewId    视图 ID
+     * @return 字段列表
+     */
     public static List<TableFieldListRes.TableField> listFields(String appId, String appSecret, String appToken, String tableId, String viewId) {
         return requireService().listFields(appId, appSecret, appToken, tableId, viewId);
     }
 
     /**
      * 构建新增数据表字段定义（基于实体注解）。
+     *
+     * @param entityClass 实体类型
+     * @return 字段定义列表
      */
     public static List<CreateTableReq.Field> buildCreateTableFields(Class<?> entityClass) {
         BitableAssert.notNull(entityClass, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]实体类型不能为空");
@@ -146,34 +277,65 @@ public final class FsDwFieldHelper {
         return fields;
     }
 
+    /**
+     * 获取字段服务。
+     *
+     * @return 字段服务
+     */
     private static FsDwFieldService requireService() {
         BitableAssert.notNull(FIELD_SERVICE, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]字段服务未注册");
         return FIELD_SERVICE;
     }
 
+    /**
+     * 获取配置属性。
+     *
+     * @return 配置属性
+     */
     private static FsDwProperties requireProperties() {
         BitableAssert.notNull(PROPERTIES, BitableErrorCode.TABLE_CONFIG_MISSING, "[飞书多维表格]配置未加载");
         return PROPERTIES;
     }
 
+    /**
+     * 获取应用ID。
+     *
+     * @return 应用ID
+     */
     private static String requireAppId() {
         String appId = requireProperties().getAppId();
         BitableAssert.notBlank(appId, BitableErrorCode.APP_CREDENTIALS_MISSING, "[飞书多维表格]appId未配置");
         return appId;
     }
 
+    /**
+     * 获取应用密钥。
+     *
+     * @return 应用密钥
+     */
     private static String requireAppSecret() {
         String appSecret = requireProperties().getAppSecret();
         BitableAssert.notBlank(appSecret, BitableErrorCode.APP_CREDENTIALS_MISSING, "[飞书多维表格]appSecret未配置");
         return appSecret;
     }
 
+    /**
+     * 获取应用令牌。
+     *
+     * @return 应用令牌
+     */
     private static String requireAppToken() {
         String appToken = requireProperties().getAppToken();
         BitableAssert.notBlank(appToken, BitableErrorCode.APP_TOKEN_MISSING, "[飞书多维表格]appToken未配置");
         return appToken;
     }
 
+    /**
+     * 解析数据表ID。
+     *
+     * @param entityClass 实体类型
+     * @return 数据表ID
+     */
     private static String resolveTableId(Class<?> entityClass) {
         BitableAssert.notNull(entityClass, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]实体类型不能为空");
         FsDwTable table = entityClass.getAnnotation(FsDwTable.class);
@@ -182,6 +344,12 @@ public final class FsDwFieldHelper {
         return table.tableId();
     }
 
+    /**
+     * 解析字段元信息列表。
+     *
+     * @param entityClass 实体类型
+     * @return 字段元信息列表
+     */
     private static List<FieldMeta> resolveFieldMetas(Class<?> entityClass) {
         List<Field> fields = getAllFields(entityClass);
         if (fields.isEmpty()) {
@@ -208,6 +376,12 @@ public final class FsDwFieldHelper {
         return metas;
     }
 
+    /**
+     * 获取实体所有非静态字段。
+     *
+     * @param type 实体类型
+     * @return 字段列表
+     */
     private static List<Field> getAllFields(Class<?> type) {
         List<Field> fields = new ArrayList<>();
         Class<?> current = type;
@@ -224,10 +398,23 @@ public final class FsDwFieldHelper {
         return fields;
     }
 
+    /**
+     * 判断字段是否为表ID字段。
+     *
+     * @param field 字段
+     * @return 是否为表ID字段
+     */
     private static boolean isTableIdField(Field field) {
         return field.getAnnotation(FsDwTableId.class) != null;
     }
 
+    /**
+     * 解析字段名称。
+     *
+     * @param field    字段
+     * @param property 字段注解
+     * @return 字段名称
+     */
     private static String resolveFieldName(Field field, FsDwTableProperty property) {
         if (property != null) {
             if (!isBlank(property.field())) {
@@ -241,16 +428,23 @@ public final class FsDwFieldHelper {
         return field.getName();
     }
 
+    /**
+     * 构建字段属性配置。
+     *
+     * @param type     字段类型
+     * @param property 字段注解
+     * @return 字段属性配置
+     */
     private static Map<String, Object> buildFieldProperty(TypeEnum type, FsDwTableProperty property) {
         if (type == null || property == null) {
-            return null;
+            return new HashMap<>();
         }
         if (type != TypeEnum.SINGLE_SELECT && type != TypeEnum.MULTI_SELECT) {
-            return null;
+            return new HashMap<>();
         }
         String[] options = property.options();
         if (options == null || options.length == 0) {
-            return null;
+            return new HashMap<>();
         }
         List<Map<String, Object>> optionList = new ArrayList<>();
         for (String option : options) {
@@ -262,13 +456,19 @@ public final class FsDwFieldHelper {
             optionList.add(optionMap);
         }
         if (optionList.isEmpty()) {
-            return null;
+            return new HashMap<>();
         }
         Map<String, Object> propertyMap = new LinkedHashMap<>();
         propertyMap.put("options", optionList);
         return propertyMap;
     }
 
+    /**
+     * 判断字符串是否为空。
+     *
+     * @param value 字符串
+     * @return 是否为空
+     */
     private static boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
     }
@@ -279,6 +479,7 @@ public final class FsDwFieldHelper {
      * @param tableClass     测试表实体类
      * @param oldField       旧字段名
      * @param updateFieldReq 更新字段请求
+     * @return 更新字段结果
      */
     public static UpdateFieldRes updateFieldByName(Class<?> tableClass, String oldField, UpdateFieldReq updateFieldReq) {
         // 列出所有字段
@@ -296,6 +497,7 @@ public final class FsDwFieldHelper {
      *
      * @param tableClass  测试表实体类
      * @param deleteField 旧字段名
+     * @return 删除字段结果
      */
     public static DeleteFieldRes deleteFieldByName(Class<?> tableClass, String deleteField) {
         // 列出所有字段
@@ -308,12 +510,23 @@ public final class FsDwFieldHelper {
         throw new RuntimeException("字段不存在");
     }
 
+    /**
+     * 字段元信息。
+     */
     private static final class FieldMeta {
         private final Field field;
         private final FsDwTableProperty property;
         private final int order;
         private final int index;
 
+        /**
+         * 构造字段元信息。
+         *
+         * @param field    字段
+         * @param property 字段注解
+         * @param order    排序值
+         * @param index    字段索引
+         */
         private FieldMeta(Field field, FsDwTableProperty property, int order, int index) {
             this.field = field;
             this.property = property;
@@ -321,18 +534,38 @@ public final class FsDwFieldHelper {
             this.index = index;
         }
 
+        /**
+         * 获取字段。
+         *
+         * @return 字段
+         */
         private Field getField() {
             return field;
         }
 
+        /**
+         * 获取字段注解。
+         *
+         * @return 字段注解
+         */
         private FsDwTableProperty getProperty() {
             return property;
         }
 
+        /**
+         * 获取排序值。
+         *
+         * @return 排序值
+         */
         private int getOrder() {
             return order;
         }
 
+        /**
+         * 获取字段索引。
+         *
+         * @return 字段索引
+         */
         private int getIndex() {
             return index;
         }

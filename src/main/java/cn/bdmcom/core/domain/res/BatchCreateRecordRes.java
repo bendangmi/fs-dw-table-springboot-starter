@@ -14,6 +14,9 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BatchCreateRecordRes extends AbstractRes<BatchCreateRecordRes.BatchRecordData> {
 
+    /**
+     * 批量新增记录返回数据。
+     */
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class BatchRecordData {
