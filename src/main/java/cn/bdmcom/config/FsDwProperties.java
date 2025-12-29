@@ -12,8 +12,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * duoweitable:
  *   app-id: xxx
  *   app-secret: yyy
- *   app-token: app_token
  * </pre>
+ *
+ * <p>appToken 请通过 @FsDwAppBase 注解配置。</p>
  */
 @ConfigurationProperties(prefix = "duoweitable")
 @Data
@@ -29,8 +30,4 @@ public class FsDwProperties {
      */
     private String appSecret;
 
-    /**
-     * 多维表格 appToken（相当于数据库）。
-     */
-    private String appToken;
 }

@@ -56,8 +56,12 @@
 ### 注解体系
 
 ```java
+@FsDwAppBase(appToken = "app_token")
+public abstract class DemoAppBase {
+}
+
 @FsDwTable(name = "表名", tableId = "tblxxx", viewId = "vewxxx")
-public class Entity {
+public class Entity extends DemoAppBase {
     @FsDwTableId                    // 标记记录 ID 字段
     private String recordId;
 
@@ -92,7 +96,7 @@ public class Entity {
 ## 项目亮点
 
 - 通过 @EnableFsDwTable 显式启用自动配置 + Forest 扫描，避免与其他实现冲突
-- 注解驱动实体映射（`@FsDwTable` / `@FsDwTableProperty` / `@FsDwTableId`），支持元字段读取
+- 注解驱动实体映射（`@FsDwAppBase` / `@FsDwTable` / `@FsDwTableProperty` / `@FsDwTableId`），支持元字段读取
 - `DwLambdaQueryWrapper` 提供 MyBatis-Plus 风格的条件、排序、分页与字段选择
 - 记录/表/字段多层级 Helper 与 Service 组合，兼顾简单调用与可扩展集成
 - Token 内存缓存 + 提前刷新缓冲，降低频繁鉴权请求
@@ -101,7 +105,7 @@ public class Entity {
 ## 功能特性
 
 - 启用注解后自动配置并扫描 Forest HTTP 客户端
-- 注解驱动实体映射（`@FsDwTable` / `@FsDwTableProperty` / `@FsDwTableId`），支持元字段映射
+- 注解驱动实体映射（`@FsDwAppBase` / `@FsDwTable` / `@FsDwTableProperty` / `@FsDwTableId`），支持元字段映射
 - 类数据库的 CRUD 体验，屏蔽飞书多维表格底层调用
 - MyBatis-Plus 风格查询，`DwLambdaQueryWrapper` 条件构造
 - 记录、数据表、字段操作的 Helper API
@@ -111,7 +115,7 @@ public class Entity {
 
 - Java 17+
 - Spring Boot 3.x
-- 飞书应用凭证（appId、appSecret、appToken）
+- 飞书应用凭证（appId、appSecret），appToken 由 @FsDwAppBase 提供
 
 ## 安装
 
@@ -141,7 +145,6 @@ dependencies {
 duoweitable:
   app-id: your-app-id
   app-secret: your-app-secret
-  app-token: your-app-token
 ```
 
 `application.properties` 等价写法：
@@ -149,7 +152,14 @@ duoweitable:
 ```properties
 duoweitable.app-id=your-app-id
 duoweitable.app-secret=your-app-secret
-duoweitable.app-token=your-app-token
+```
+
+appToken 建议放在实体父类的 `@FsDwAppBase` 中（appToken 相当于一个 Excel，tableId 相当于一个 Sheet）：
+
+```java
+@FsDwAppBase(appToken = "app_token")
+public abstract class DemoAppBase {
+}
 ```
 
 Forest 客户端可选配置（仅在需要覆盖时配置）：
@@ -202,11 +212,19 @@ public class ForestClientConfig {
 
 ## 快速开始
 
-### 1) 定义实体
+### 1) 定义 App 基类
+
+```java
+@FsDwAppBase(appToken = "app_token")
+public abstract class DemoAppBase {
+}
+```
+
+### 2) 定义实体
 
 ```java
 @FsDwTable(name = "Test Table", tableId = "tblxxxxx", viewId = "vewxxxxx")
-public class TestTable {
+public class TestTable extends DemoAppBase {
   @FsDwTableId
   private String recordId;
 
@@ -218,13 +236,13 @@ public class TestTable {
 }
 ```
 
-### 2) 查询记录
+### 3) 查询记录
 
 ```java
 List<TestTable> records = FsDwRecordHelper.queryRecords(TestTable.class);
 ```
 
-### 3) 新增记录
+### 4) 新增记录
 
 ```java
 TestTable add = new TestTable();
@@ -233,7 +251,7 @@ add.setAge(18);
 AddRecordRes res = FsDwRecordHelper.addRecord(add);
 ```
 
-### 4) 批量新增记录
+### 5) 批量新增记录
 
 ```java
 List<TestTable> batch = new ArrayList<>();
@@ -246,7 +264,7 @@ for (int i = 0; i < 10; i++) {
 BatchCreateRecordRes batchRes = FsDwRecordHelper.batchCreateRecords(TestTable.class, batch);
 ```
 
-### 5) 更新记录
+### 6) 更新记录
 
 ```java
 TestTable update = new TestTable();
@@ -255,7 +273,7 @@ update.setName("Alice");
 UpdateRecordRes res = FsDwRecordHelper.updateRecord(update);
 ```
 
-### 6) 删除记录
+### 7) 删除记录
 
 ```java
 TestTable del = new TestTable();
@@ -284,7 +302,7 @@ list = FsDwRecordHelper.queryRecords(TestTable.class, wrapper);
 
 ```java
 CreateTableRes created = FsDwTableHelper.createTable(TestTable.class);
-List<ListTableRes.TableItem> all = FsDwTableHelper.listAllTables();
+List<ListTableRes.TableItem> all = FsDwTableHelper.listAllTables(TestTable.class);
 UpdateTableRes updated = FsDwTableHelper.updateTable(TestTable.class);
 DeleteTableRes deleted = FsDwTableHelper.deleteTable(TestTable.class);
 ```

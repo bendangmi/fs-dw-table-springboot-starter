@@ -2,6 +2,7 @@ package cn.bdmcom.core.helper;
 
 import cn.bdmcom.config.FsDwProperties;
 import cn.bdmcom.core.domain.DwLambdaQueryWrapper;
+import cn.bdmcom.core.domain.FsDwAppBase;
 import cn.bdmcom.core.domain.FsDwTable;
 import cn.bdmcom.core.domain.FsDwTableId;
 import cn.bdmcom.core.domain.FsDwTableProperty;
@@ -56,7 +57,7 @@ public final class FsDwRecordHelper {
     }
 
     /**
-     * 新增记录（使用默认 appId/appSecret/appToken）。
+     * 新增记录（基于 appId/appSecret/appToken）。
      *
      * @param appId     应用ID
      * @param appSecret 应用密钥
@@ -70,7 +71,7 @@ public final class FsDwRecordHelper {
     }
 
     /**
-     * 新增记录（使用默认 appId/appSecret/appToken）。
+     * 新增记录（基于 appId/appSecret/appToken）。
      *
      * @param appId     应用ID
      * @param appSecret 应用密钥
@@ -86,74 +87,14 @@ public final class FsDwRecordHelper {
     /**
      * 新增记录（从实体注解读取 tableId）。
      *
-     * @param tableId 数据表唯一标识
-     * @param fields  字段值集合
-     * @return 新增记录结果
-     */
-    public static AddRecordRes addRecord(String tableId, Map<String, Object> fields) {
-        return addRecord(requireAppId(), requireAppSecret(), requireAppToken(), tableId, fields);
-    }
-
-    /**
-     * 新增记录（从实体注解读取 tableId）。
-     *
-     * @param tableId 数据表唯一标识
-     * @param payload 记录字段实体
-     * @return 新增记录结果
-     */
-    public static AddRecordRes addRecord(String tableId, Object payload) {
-        return addRecord(requireAppId(), requireAppSecret(), requireAppToken(), tableId, payload);
-    }
-
-    /**
-     * 新增记录（从实体注解读取 tableId）。
-     *
      * @param payload 记录字段实体
      * @return 新增记录结果
      */
     public static AddRecordRes addRecord(Object payload) {
         TableMeta meta = resolveTableMeta(payload);
-        return addRecord(requireAppId(), requireAppSecret(), requireAppToken(), meta.getTableId(), payload);
+        String appToken = resolveAppToken(payload);
+        return addRecord(requireAppId(), requireAppSecret(), appToken, meta.getTableId(), payload);
     }
-
-    /**
-     * 批量新增记录（使用默认 appId/appSecret/appToken）。
-     *
-     * @param tableId 数据表唯一标识
-     * @param req     批量新增记录请求体
-     * @return 批量新增结果
-     */
-    public static BatchCreateRecordRes batchCreateRecords(String tableId, BatchCreateRecordReq req) {
-        return batchCreateRecords(requireAppId(), requireAppSecret(), requireAppToken(), tableId, null, null, null, req);
-    }
-
-    /**
-     * 批量新增记录（使用默认 appId/appSecret/appToken）。
-     *
-     * @param tableId                数据表唯一标识
-     * @param userIdType             用户 ID 类型
-     * @param clientToken            幂等请求标识
-     * @param ignoreConsistencyCheck 是否忽略一致性校验
-     * @param req                    批量新增记录请求体
-     * @return 批量新增结果
-     */
-    public static BatchCreateRecordRes batchCreateRecords(String tableId, String userIdType, String clientToken,
-                                                          Boolean ignoreConsistencyCheck, BatchCreateRecordReq req) {
-        return batchCreateRecords(requireAppId(), requireAppSecret(), requireAppToken(), tableId, userIdType, clientToken,
-                ignoreConsistencyCheck, req);
-    }
-
-    /**
-     * 批量新增记录（使用默认 appId/appSecret/appToken）。
-     *
-     * @param tableId  数据表唯一标识
-     * @param payloads 记录字段实体列表
-     * @return 批量新增结果
-     */
-    public static BatchCreateRecordRes batchCreateRecords(String tableId, List<?> payloads) {
-        return batchCreateRecords(tableId, buildBatchCreateRecordReq(payloads));
-    }
-
 
     /**
      * 批量新增记录（从实体注解读取 tableId）。
@@ -164,7 +105,9 @@ public final class FsDwRecordHelper {
      */
     public static BatchCreateRecordRes batchCreateRecords(Class<?> entityClass, List<?> payloads) {
         String tableId = resolveTableMeta(entityClass).getTableId();
-        return batchCreateRecords(tableId, payloads);
+        BatchCreateRecordReq req = buildBatchCreateRecordReq(payloads);
+        return batchCreateRecords(requireAppId(), requireAppSecret(), resolveAppToken(entityClass), tableId,
+                null, null, null, req);
     }
 
     /**
@@ -218,30 +161,6 @@ public final class FsDwRecordHelper {
     }
 
     /**
-     * 更新记录（使用默认 appId/appSecret/appToken）。
-     *
-     * @param tableId  数据表唯一标识
-     * @param recordId 记录唯一标识
-     * @param fields   字段值集合
-     * @return 更新记录结果
-     */
-    public static UpdateRecordRes updateRecord(String tableId, String recordId, Map<String, Object> fields) {
-        return updateRecord(requireAppId(), requireAppSecret(), requireAppToken(), tableId, recordId, fields);
-    }
-
-    /**
-     * 更新记录（使用默认 appId/appSecret/appToken）。
-     *
-     * @param tableId  数据表唯一标识
-     * @param recordId 记录唯一标识
-     * @param payload  记录字段实体
-     * @return 更新记录结果
-     */
-    public static UpdateRecordRes updateRecord(String tableId, String recordId, Object payload) {
-        return updateRecord(requireAppId(), requireAppSecret(), requireAppToken(), tableId, recordId, payload);
-    }
-
-    /**
      * 更新记录（recordId 来自实体注解）。
      *
      * @param payload 记录字段实体
@@ -250,44 +169,8 @@ public final class FsDwRecordHelper {
     public static UpdateRecordRes updateRecord(Object payload) {
         TableMeta meta = resolveTableMeta(payload);
         String recordId = resolveRecordId(payload);
-        return updateRecord(requireAppId(), requireAppSecret(), requireAppToken(), meta.getTableId(), recordId, payload);
-    }
-
-    /**
-     * 批量更新记录（使用默认 appId/appSecret/appToken）。
-     *
-     * @param tableId 数据表唯一标识
-     * @param req     批量更新记录请求体
-     * @return 批量更新结果
-     */
-    public static BatchUpdateRecordRes batchUpdateRecords(String tableId, BatchUpdateRecordReq req) {
-        return batchUpdateRecords(requireAppId(), requireAppSecret(), requireAppToken(), tableId, null, null, req);
-    }
-
-    /**
-     * 批量更新记录（使用默认 appId/appSecret/appToken）。
-     *
-     * @param tableId                数据表唯一标识
-     * @param userIdType             用户 ID 类型
-     * @param ignoreConsistencyCheck 是否忽略一致性校验
-     * @param req                    批量更新记录请求体
-     * @return 批量更新结果
-     */
-    public static BatchUpdateRecordRes batchUpdateRecords(String tableId, String userIdType, Boolean ignoreConsistencyCheck,
-                                                          BatchUpdateRecordReq req) {
-        return batchUpdateRecords(requireAppId(), requireAppSecret(), requireAppToken(), tableId, userIdType,
-                ignoreConsistencyCheck, req);
-    }
-
-    /**
-     * 批量更新记录（使用默认 appId/appSecret/appToken）。
-     *
-     * @param tableId  数据表唯一标识
-     * @param payloads 记录字段实体列表
-     * @return 批量更新结果
-     */
-    public static BatchUpdateRecordRes batchUpdateRecords(String tableId, List<?> payloads) {
-        return batchUpdateRecords(tableId, buildBatchUpdateRecordReq(payloads));
+        String appToken = resolveAppToken(payload);
+        return updateRecord(requireAppId(), requireAppSecret(), appToken, meta.getTableId(), recordId, payload);
     }
 
     /**
@@ -299,7 +182,8 @@ public final class FsDwRecordHelper {
      */
     public static BatchUpdateRecordRes batchUpdateRecords(Class<?> entityClass, List<?> payloads) {
         String tableId = resolveTableMeta(entityClass).getTableId();
-        return batchUpdateRecords(tableId, payloads);
+        BatchUpdateRecordReq req = buildBatchUpdateRecordReq(payloads);
+        return batchUpdateRecords(requireAppId(), requireAppSecret(), resolveAppToken(entityClass), tableId, null, null, req);
     }
 
     /**
@@ -334,29 +218,6 @@ public final class FsDwRecordHelper {
     }
 
     /**
-     * 查询记录（使用默认 appId/appSecret/appToken）。
-     *
-     * @param tableId 数据表唯一标识
-     * @param req     查询记录请求体
-     * @return 查询记录响应
-     */
-    public static QueryRecordRes queryRecord(String tableId, QueryRecordReq req) {
-        return queryRecord(requireAppId(), requireAppSecret(), requireAppToken(), tableId, req);
-    }
-
-    /**
-     * 条件分页查询记录（使用查询构造器）。
-     *
-     * @param tableId  数据表唯一标识
-     * @param wrapper  查询构造器
-     * @return 查询记录响应
-     */
-    public static QueryRecordRes queryRecord(String tableId, DwLambdaQueryWrapper<?> wrapper) {
-        QueryRecordReq req = buildQueryRecordReq(wrapper, null);
-        return queryRecord(requireAppId(), requireAppSecret(), requireAppToken(), tableId, req);
-    }
-
-    /**
      * 条件分页查询记录（基于实体注解）。
      *
      * @param clazz   实体类型
@@ -367,7 +228,7 @@ public final class FsDwRecordHelper {
     public static <T> QueryRecordRes queryRecord(Class<T> clazz, DwLambdaQueryWrapper<T> wrapper) {
         QueryRecordReq req = buildQueryRecordReq(wrapper, clazz);
         TableMeta meta = resolveTableMeta(clazz);
-        return queryRecord(requireAppId(), requireAppSecret(), requireAppToken(), meta.getTableId(), req);
+        return queryRecord(requireAppId(), requireAppSecret(), resolveAppToken(clazz), meta.getTableId(), req);
     }
 
     /**
@@ -387,19 +248,6 @@ public final class FsDwRecordHelper {
     }
 
     /**
-     * 查询记录并映射为实体列表（使用默认 appId/appSecret/appToken）。
-     *
-     * @param tableId 数据表唯一标识
-     * @param req     查询记录请求体
-     * @param clazz   实体类型
-     * @param <T>     实体类型
-     * @return 实体列表
-     */
-    public static <T> List<T> queryRecords(String tableId, QueryRecordReq req, Class<T> clazz) {
-        return queryRecords(requireAppId(), requireAppSecret(), requireAppToken(), tableId, req, clazz);
-    }
-
-    /**
      * 条件分页查询记录并映射为实体列表（基于实体注解）。
      *
      * @param clazz   实体类型
@@ -410,7 +258,7 @@ public final class FsDwRecordHelper {
     public static <T> List<T> queryRecords(Class<T> clazz, DwLambdaQueryWrapper<T> wrapper) {
         QueryRecordReq req = buildQueryRecordReq(wrapper, clazz);
         TableMeta meta = resolveTableMeta(clazz);
-        return queryRecords(requireAppId(), requireAppSecret(), requireAppToken(), meta.getTableId(), req, clazz);
+        return queryRecords(requireAppId(), requireAppSecret(), resolveAppToken(clazz), meta.getTableId(), req, clazz);
     }
 
     /**
@@ -424,7 +272,7 @@ public final class FsDwRecordHelper {
      */
     public static <T> List<T> queryRecords(String tableId, String viewId, Class<T> clazz) {
         QueryRecordReq req = buildQueryRecordReq(viewId, clazz);
-        return queryRecords(tableId, req, clazz);
+        return queryRecords(requireAppId(), requireAppSecret(), resolveAppToken(clazz), tableId, req, clazz);
     }
 
     /**
@@ -438,7 +286,7 @@ public final class FsDwRecordHelper {
         TableMeta meta = resolveTableMeta(clazz);
         BitableAssert.notBlank(meta.getViewId(), BitableErrorCode.VIEW_ID_MISSING, "[飞书多维表格]viewId未配置");
         QueryRecordReq req = buildQueryRecordReq(meta.getViewId(), clazz);
-        return queryRecords(meta.getTableId(), req, clazz);
+        return queryRecords(requireAppId(), requireAppSecret(), resolveAppToken(clazz), meta.getTableId(), req, clazz);
     }
 
     /**
@@ -454,7 +302,7 @@ public final class FsDwRecordHelper {
         if (req != null && StrUtil.isBlank(req.getViewId()) && StrUtil.isNotBlank(meta.getViewId())) {
             req.setViewId(meta.getViewId());
         }
-        return queryRecords(meta.getTableId(), req, clazz);
+        return queryRecords(requireAppId(), requireAppSecret(), resolveAppToken(clazz), meta.getTableId(), req, clazz);
     }
 
     /**
@@ -472,17 +320,6 @@ public final class FsDwRecordHelper {
     }
 
     /**
-     * 删除记录（使用默认 appId/appSecret/appToken）。
-     *
-     * @param tableId  数据表唯一标识
-     * @param recordId 记录唯一标识
-     * @return 删除记录结果
-     */
-    public static DeleteRecordRes deleteRecord(String tableId, String recordId) {
-        return deleteRecord(requireAppId(), requireAppSecret(), requireAppToken(), tableId, recordId);
-    }
-
-    /**
      * 删除记录（recordId/tableId 由实体注解与字段提供）。
      *
      * @param payload 记录字段实体
@@ -491,29 +328,8 @@ public final class FsDwRecordHelper {
     public static DeleteRecordRes deleteRecord(Object payload) {
         TableMeta meta = resolveTableMeta(payload);
         String recordId = resolveRecordId(payload);
-        return deleteRecord(meta.getTableId(), recordId);
-    }
-
-    /**
-     * 批量删除记录（使用默认 appId/appSecret/appToken）。
-     *
-     * @param tableId 数据表唯一标识
-     * @param req     批量删除记录请求体
-     * @return 批量删除结果
-     */
-    public static BatchDeleteRecordRes batchDeleteRecords(String tableId, BatchDeleteRecordReq req) {
-        return batchDeleteRecords(requireAppId(), requireAppSecret(), requireAppToken(), tableId, req);
-    }
-
-    /**
-     * 批量删除记录（使用默认 appId/appSecret/appToken）。
-     *
-     * @param tableId   数据表唯一标识
-     * @param recordIds 记录ID列表
-     * @return 批量删除结果
-     */
-    public static BatchDeleteRecordRes batchDeleteRecords(String tableId, List<String> recordIds) {
-        return batchDeleteRecords(tableId, buildBatchDeleteRecordReq(recordIds));
+        String appToken = resolveAppToken(payload);
+        return deleteRecord(requireAppId(), requireAppSecret(), appToken, meta.getTableId(), recordId);
     }
 
     /**
@@ -525,7 +341,8 @@ public final class FsDwRecordHelper {
      */
     public static BatchDeleteRecordRes batchDeleteRecords(Class<?> entityClass, List<String> recordIds) {
         String tableId = resolveTableMeta(entityClass).getTableId();
-        return batchDeleteRecords(tableId, recordIds);
+        BatchDeleteRecordReq req = buildBatchDeleteRecordReq(recordIds);
+        return batchDeleteRecords(requireAppId(), requireAppSecret(), resolveAppToken(entityClass), tableId, req);
     }
 
     /**
@@ -543,28 +360,6 @@ public final class FsDwRecordHelper {
     }
 
     /**
-     * 批量获取记录（使用默认 appId/appSecret/appToken）。
-     *
-     * @param tableId 数据表唯一标识
-     * @param req     批量获取记录请求体
-     * @return 批量获取结果
-     */
-    public static BatchGetRecordRes batchGetRecords(String tableId, BatchGetRecordReq req) {
-        return batchGetRecords(requireAppId(), requireAppSecret(), requireAppToken(), tableId, req);
-    }
-
-    /**
-     * 批量获取记录（使用默认 appId/appSecret/appToken）。
-     *
-     * @param tableId   数据表唯一标识
-     * @param recordIds 记录ID列表
-     * @return 批量获取结果
-     */
-    public static BatchGetRecordRes batchGetRecords(String tableId, List<String> recordIds) {
-        return batchGetRecords(tableId, buildBatchGetRecordReq(recordIds));
-    }
-
-    /**
      * 批量获取记录（从实体注解读取 tableId）。
      *
      * @param entityClass 实体类型
@@ -573,7 +368,8 @@ public final class FsDwRecordHelper {
      */
     public static BatchGetRecordRes batchGetRecords(Class<?> entityClass, List<String> recordIds) {
         String tableId = resolveTableMeta(entityClass).getTableId();
-        return batchGetRecords(tableId, recordIds);
+        BatchGetRecordReq req = buildBatchGetRecordReq(recordIds);
+        return batchGetRecords(requireAppId(), requireAppSecret(), resolveAppToken(entityClass), tableId, req);
     }
 
     /**
@@ -1114,14 +910,29 @@ public final class FsDwRecordHelper {
     }
 
     /**
-     * 获取应用令牌。
+     * 解析应用令牌（优先使用实体父类上的 @FsDwAppBase）。
      *
+     * @param payload 实体对象
      * @return 应用令牌
      */
-    private static String requireAppToken() {
-        String appToken = requireProperties().getAppToken();
-        BitableAssert.notBlank(appToken, BitableErrorCode.APP_TOKEN_MISSING, "[飞书多维表格]appToken未配置");
-        return appToken;
+    private static String resolveAppToken(Object payload) {
+        BitableAssert.notNull(payload, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]对象不能为空");
+        return resolveAppToken(payload.getClass());
+    }
+
+    /**
+     * 解析应用令牌（优先使用实体父类上的 @FsDwAppBase）。
+     *
+     * @param entityClass 实体类型
+     * @return 应用令牌
+     */
+    private static String resolveAppToken(Class<?> entityClass) {
+        BitableAssert.notNull(entityClass, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]实体类型不能为空");
+        FsDwAppBase appBase = entityClass.getAnnotation(FsDwAppBase.class);
+        String appToken = appBase == null ? null : appBase.appToken();
+        BitableAssert.notBlank(appToken, BitableErrorCode.APP_TOKEN_MISSING,
+                "[飞书多维表格]appToken未配置，请在父类添加@FsDwAppBase或显式传入appToken");
+        return appToken.trim();
     }
 
     /**

@@ -2,6 +2,7 @@ package cn.bdmcom.core.helper;
 
 
 import cn.bdmcom.config.FsDwProperties;
+import cn.bdmcom.core.domain.FsDwAppBase;
 import cn.bdmcom.core.domain.FsDwTable;
 import cn.bdmcom.core.domain.FsDwTableId;
 import cn.bdmcom.core.domain.FsDwTableProperty;
@@ -53,29 +54,6 @@ public final class FsDwFieldHelper {
     }
 
     /**
-     * 新增字段（默认 appId/appSecret/appToken）。
-     *
-     * @param tableId 数据表唯一标识
-     * @param req     新增字段请求体
-     * @return 新增字段结果
-     */
-    public static AddFieldRes createField(String tableId, AddFieldReq req) {
-        return createField(requireAppId(), requireAppSecret(), requireAppToken(), tableId, null, req);
-    }
-
-    /**
-     * 新增字段（默认 appId/appSecret/appToken）。
-     *
-     * @param tableId     数据表唯一标识
-     * @param clientToken 幂等请求标识
-     * @param req         新增字段请求体
-     * @return 新增字段结果
-     */
-    public static AddFieldRes createField(String tableId, String clientToken, AddFieldReq req) {
-        return createField(requireAppId(), requireAppSecret(), requireAppToken(), tableId, clientToken, req);
-    }
-
-    /**
      * 新增字段（基于实体注解解析表ID）。
      *
      * @param entityClass 实体类型
@@ -84,7 +62,8 @@ public final class FsDwFieldHelper {
      */
     public static AddFieldRes createField(Class<?> entityClass, AddFieldReq req) {
         String tableId = resolveTableId(entityClass);
-        return createField(requireAppId(), requireAppSecret(), requireAppToken(), tableId, null, req);
+        String appToken = resolveAppToken(entityClass);
+        return createField(requireAppId(), requireAppSecret(), appToken, tableId, null, req);
     }
 
     /**
@@ -97,7 +76,8 @@ public final class FsDwFieldHelper {
      */
     public static AddFieldRes createField(Class<?> entityClass, String clientToken, AddFieldReq req) {
         String tableId = resolveTableId(entityClass);
-        return createField(requireAppId(), requireAppSecret(), requireAppToken(), tableId, clientToken, req);
+        String appToken = resolveAppToken(entityClass);
+        return createField(requireAppId(), requireAppSecret(), appToken, tableId, clientToken, req);
     }
 
     /**
@@ -116,18 +96,6 @@ public final class FsDwFieldHelper {
     }
 
     /**
-     * 更新字段（默认 appId/appSecret/appToken）。
-     *
-     * @param tableId 数据表唯一标识
-     * @param fieldId 字段唯一标识
-     * @param req     更新字段请求体
-     * @return 更新字段结果
-     */
-    public static UpdateFieldRes updateField(String tableId, String fieldId, UpdateFieldReq req) {
-        return updateField(requireAppId(), requireAppSecret(), requireAppToken(), tableId, fieldId, req);
-    }
-
-    /**
      * 更新字段（基于实体注解解析表ID）。
      *
      * @param entityClass 实体类型
@@ -137,7 +105,8 @@ public final class FsDwFieldHelper {
      */
     public static UpdateFieldRes updateField(Class<?> entityClass, String fieldId, UpdateFieldReq req) {
         String tableId = resolveTableId(entityClass);
-        return updateField(requireAppId(), requireAppSecret(), requireAppToken(), tableId, fieldId, req);
+        String appToken = resolveAppToken(entityClass);
+        return updateField(requireAppId(), requireAppSecret(), appToken, tableId, fieldId, req);
     }
 
     /**
@@ -156,17 +125,6 @@ public final class FsDwFieldHelper {
     }
 
     /**
-     * 删除字段（默认 appId/appSecret/appToken）。
-     *
-     * @param tableId 数据表唯一标识
-     * @param fieldId 字段唯一标识
-     * @return 删除字段结果
-     */
-    public static DeleteFieldRes deleteField(String tableId, String fieldId) {
-        return deleteField(requireAppId(), requireAppSecret(), requireAppToken(), tableId, fieldId);
-    }
-
-    /**
      * 删除字段（基于实体注解解析表ID）。
      *
      * @param entityClass 实体类型
@@ -175,7 +133,8 @@ public final class FsDwFieldHelper {
      */
     public static DeleteFieldRes deleteField(Class<?> entityClass, String fieldId) {
         String tableId = resolveTableId(entityClass);
-        return deleteField(requireAppId(), requireAppSecret(), requireAppToken(), tableId, fieldId);
+        String appToken = resolveAppToken(entityClass);
+        return deleteField(requireAppId(), requireAppSecret(), appToken, tableId, fieldId);
     }
 
     /**
@@ -193,27 +152,6 @@ public final class FsDwFieldHelper {
     }
 
     /**
-     * 查询数据表字段列表（默认 appId/appSecret/appToken）。
-     *
-     * @param tableId 数据表唯一标识
-     * @return 字段列表
-     */
-    public static List<TableFieldListRes.TableField> listFields(String tableId) {
-        return listFields(requireAppId(), requireAppSecret(), requireAppToken(), tableId, null);
-    }
-
-    /**
-     * 查询数据表字段列表（默认 appId/appSecret/appToken）。
-     *
-     * @param tableId 数据表唯一标识
-     * @param viewId  视图 ID
-     * @return 字段列表
-     */
-    public static List<TableFieldListRes.TableField> listFields(String tableId, String viewId) {
-        return listFields(requireAppId(), requireAppSecret(), requireAppToken(), tableId, viewId);
-    }
-
-    /**
      * 查询数据表字段列表（基于实体注解解析表ID）。
      *
      * @param entityClass 实体类型
@@ -221,7 +159,8 @@ public final class FsDwFieldHelper {
      */
     public static List<TableFieldListRes.TableField> listFields(Class<?> entityClass) {
         String tableId = resolveTableId(entityClass);
-        return listFields(requireAppId(), requireAppSecret(), requireAppToken(), tableId, null);
+        String appToken = resolveAppToken(entityClass);
+        return listFields(requireAppId(), requireAppSecret(), appToken, tableId, null);
     }
 
     /**
@@ -233,7 +172,8 @@ public final class FsDwFieldHelper {
      */
     public static List<TableFieldListRes.TableField> listFields(Class<?> entityClass, String viewId) {
         String tableId = resolveTableId(entityClass);
-        return listFields(requireAppId(), requireAppSecret(), requireAppToken(), tableId, viewId);
+        String appToken = resolveAppToken(entityClass);
+        return listFields(requireAppId(), requireAppSecret(), appToken, tableId, viewId);
     }
 
     /**
@@ -320,14 +260,18 @@ public final class FsDwFieldHelper {
     }
 
     /**
-     * 获取应用令牌。
+     * 解析应用令牌（优先使用实体父类上的 @FsDwAppBase）。
      *
+     * @param entityClass 实体类型
      * @return 应用令牌
      */
-    private static String requireAppToken() {
-        String appToken = requireProperties().getAppToken();
-        BitableAssert.notBlank(appToken, BitableErrorCode.APP_TOKEN_MISSING, "[飞书多维表格]appToken未配置");
-        return appToken;
+    private static String resolveAppToken(Class<?> entityClass) {
+        BitableAssert.notNull(entityClass, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]实体类型不能为空");
+        FsDwAppBase appBase = entityClass.getAnnotation(FsDwAppBase.class);
+        String appToken = appBase == null ? null : appBase.appToken();
+        BitableAssert.notBlank(appToken, BitableErrorCode.APP_TOKEN_MISSING,
+                "[飞书多维表格]appToken未配置，请在父类添加@FsDwAppBase或显式传入appToken");
+        return appToken.trim();
     }
 
     /**

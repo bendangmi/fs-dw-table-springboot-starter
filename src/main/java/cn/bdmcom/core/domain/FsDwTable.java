@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * 飞书多维表格表信息注解。
  *
- * <p>appToken 由配置提供，tableId/viewId 由实体类定义。</p>
+ * <p>appToken 由 @FsDwAppBase 提供，tableId/viewId 由实体类定义。</p>
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

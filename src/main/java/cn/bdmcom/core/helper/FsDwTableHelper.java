@@ -1,6 +1,7 @@
 package cn.bdmcom.core.helper;
 
 import cn.bdmcom.config.FsDwProperties;
+import cn.bdmcom.core.domain.FsDwAppBase;
 import cn.bdmcom.core.domain.FsDwTable;
 import cn.bdmcom.core.domain.req.BatchCreateTableReq;
 import cn.bdmcom.core.domain.req.BatchDeleteTableReq;
@@ -47,16 +48,6 @@ public final class FsDwTableHelper {
     }
 
     /**
-     * 新增数据表（默认 appId/appSecret/appToken）。
-     *
-     * @param req 新增数据表请求体
-     * @return 新增结果
-     */
-    public static CreateTableRes createTable(CreateTableReq req) {
-        return createTable(requireAppId(), requireAppSecret(), requireAppToken(), req);
-    }
-
-    /**
      * 新增数据表（基于 appId/appSecret/appToken）。
      *
      * @param appId     应用ID
@@ -76,7 +67,7 @@ public final class FsDwTableHelper {
      * @return 新增结果
      */
     public static CreateTableRes createTable(Class<?> entityClass) {
-        return createTable(requireAppId(), requireAppSecret(), requireAppToken(), entityClass);
+        return createTable(requireAppId(), requireAppSecret(), resolveAppToken(entityClass), entityClass);
     }
 
     /**
@@ -124,16 +115,6 @@ public final class FsDwTableHelper {
     }
 
     /**
-     * 批量新增数据表（默认 appId/appSecret/appToken）。
-     *
-     * @param req 批量新增数据表请求体
-     * @return 批量新增结果
-     */
-    public static BatchCreateTableRes batchCreateTable(BatchCreateTableReq req) {
-        return batchCreateTable(requireAppId(), requireAppSecret(), requireAppToken(), req);
-    }
-
-    /**
      * 批量新增数据表（基于 appId/appSecret/appToken）。
      *
      * @param appId     应用ID
@@ -147,24 +128,13 @@ public final class FsDwTableHelper {
     }
 
     /**
-     * 更新数据表名称（默认 appId/appSecret/appToken）。
-     *
-     * @param tableId 数据表唯一标识
-     * @param req     更新数据表请求体
-     * @return 更新结果
-     */
-    public static UpdateTableRes updateTable(String tableId, UpdateTableReq req) {
-        return updateTable(requireAppId(), requireAppSecret(), requireAppToken(), tableId, req);
-    }
-
-    /**
      * 更新数据表名称（基于实体注解生成请求）。
      *
      * @param entityClass 实体类型
      * @return 更新结果
      */
     public static UpdateTableRes updateTable(Class<?> entityClass) {
-        return updateTable(requireAppId(), requireAppSecret(), requireAppToken(), entityClass);
+        return updateTable(requireAppId(), requireAppSecret(), resolveAppToken(entityClass), entityClass);
     }
 
     /**
@@ -176,7 +146,7 @@ public final class FsDwTableHelper {
      */
     public static UpdateTableRes updateTable(Class<?> entityClass, UpdateTableReq req) {
         String tableId = resolveTableId(entityClass);
-        return updateTable(requireAppId(), requireAppSecret(), requireAppToken(), tableId, req);
+        return updateTable(requireAppId(), requireAppSecret(), resolveAppToken(entityClass), tableId, req);
     }
 
     /**
@@ -209,24 +179,14 @@ public final class FsDwTableHelper {
     }
 
     /**
-     * 删除数据表（默认 appId/appSecret/appToken）。
+     * 删除数据表（默认 appId/appSecret，appToken 来自实体父类）。
      *
      * @param entityClass 实体类型
      * @return 删除结果
      */
     public static DeleteTableRes deleteTable(Class<?> entityClass) {
         String tableId = resolveTableId(entityClass);
-        return deleteTable(requireAppId(), requireAppSecret(), requireAppToken(), tableId);
-    }
-
-    /**
-     * 删除数据表（基于 appId/appSecret/appToken）。
-     *
-     * @param tableId 数据表唯一标识
-     * @return 删除结果
-     */
-    public static DeleteTableRes deleteTable(String tableId) {
-        return deleteTable(requireAppId(), requireAppSecret(), requireAppToken(), tableId);
+        return deleteTable(requireAppId(), requireAppSecret(), resolveAppToken(entityClass), tableId);
     }
 
     /**
@@ -243,16 +203,6 @@ public final class FsDwTableHelper {
     }
 
     /**
-     * 批量删除数据表（默认 appId/appSecret/appToken）。
-     *
-     * @param req 批量删除数据表请求体
-     * @return 批量删除结果
-     */
-    public static BatchDeleteTableRes batchDeleteTable(BatchDeleteTableReq req) {
-        return batchDeleteTable(requireAppId(), requireAppSecret(), requireAppToken(), req);
-    }
-
-    /**
      * 批量删除数据表（基于 appId/appSecret/appToken）。
      *
      * @param appId     应用ID
@@ -263,17 +213,6 @@ public final class FsDwTableHelper {
      */
     public static BatchDeleteTableRes batchDeleteTable(String appId, String appSecret, String appToken, BatchDeleteTableReq req) {
         return requireService().batchDeleteTable(appId, appSecret, appToken, req);
-    }
-
-    /**
-     * 列出数据表（默认 appId/appSecret/appToken）。
-     *
-     * @param pageSize  分页大小
-     * @param pageToken 分页标记
-     * @return 数据表列表响应
-     */
-    public static ListTableRes listTables(Integer pageSize, String pageToken) {
-        return listTables(requireAppId(), requireAppSecret(), requireAppToken(), pageSize, pageToken);
     }
 
     /**
@@ -291,12 +230,13 @@ public final class FsDwTableHelper {
     }
 
     /**
-     * 列出所有数据表（自动分页）。
+     * 列出所有数据表（基于实体父类上的 appToken）。
      *
+     * @param entityClass 实体类型
      * @return 所有数据表列表
      */
-    public static List<ListTableRes.TableItem> listAllTables() {
-        return listAllTables(requireAppToken());
+    public static List<ListTableRes.TableItem> listAllTables(Class<?> entityClass) {
+        return listAllTables(resolveAppToken(entityClass));
     }
 
     /**
@@ -323,7 +263,7 @@ public final class FsDwTableHelper {
     }
 
     /**
-     * 获取表服务（默认 appId/appSecret/appToken）。
+     * 获取表服务（默认 appId/appSecret）。
      *
      * @return 数据表服务
      */
@@ -333,7 +273,7 @@ public final class FsDwTableHelper {
     }
 
     /**
-     * 获取配置（默认 appId/appSecret/appToken）。
+     * 获取配置（默认 appId/appSecret）。
      *
      * @return 配置信息
      */
@@ -343,7 +283,7 @@ public final class FsDwTableHelper {
     }
 
     /**
-     * 获取应用ID（默认 appId/appSecret/appToken）。
+     * 获取应用ID（默认 appId/appSecret）。
      *
      * @return 应用ID
      */
@@ -354,7 +294,7 @@ public final class FsDwTableHelper {
     }
 
     /**
-     * 获取应用密钥（默认 appId/appSecret/appToken）。
+     * 获取应用密钥（默认 appId/appSecret）。
      *
      * @return 应用密钥
      */
@@ -365,18 +305,22 @@ public final class FsDwTableHelper {
     }
 
     /**
-     * 获取应用令牌（默认 appId/appSecret/appToken）。
+     * 解析应用令牌（优先使用实体父类上的 @FsDwAppBase）。
      *
+     * @param entityClass 实体类型
      * @return 应用令牌
      */
-    private static String requireAppToken() {
-        String appToken = requireProperties().getAppToken();
-        BitableAssert.notBlank(appToken, BitableErrorCode.APP_TOKEN_MISSING, "[飞书多维表格]appToken未配置");
-        return appToken;
+    private static String resolveAppToken(Class<?> entityClass) {
+        BitableAssert.notNull(entityClass, BitableErrorCode.PARAM_REQUIRED, "[飞书多维表格]实体类型不能为空");
+        FsDwAppBase appBase = entityClass.getAnnotation(FsDwAppBase.class);
+        String appToken = appBase == null ? null : appBase.appToken();
+        BitableAssert.notBlank(appToken, BitableErrorCode.APP_TOKEN_MISSING,
+                "[飞书多维表格]appToken未配置，请在父类添加@FsDwAppBase或显式传入appToken");
+        return appToken.trim();
     }
 
     /**
-     * 获取数据表ID（默认 appId/appSecret/appToken）。
+     * 获取数据表ID（默认 appId/appSecret）。
      *
      * @param entityClass 实体类型
      * @return 数据表ID
@@ -389,7 +333,7 @@ public final class FsDwTableHelper {
     }
 
     /**
-     * 获取数据表元信息（默认 appId/appSecret/appToken）。
+     * 获取数据表元信息（默认 appId/appSecret）。
      *
      * @param entityClass 实体类型
      * @return 表注解元信息
@@ -402,7 +346,7 @@ public final class FsDwTableHelper {
     }
 
     /**
-     * 构建更新数据表请求（默认 appId/appSecret/appToken）。
+     * 构建更新数据表请求（默认 appId/appSecret）。
      *
      * @param entityClass 实体类型
      * @return 更新数据表请求体

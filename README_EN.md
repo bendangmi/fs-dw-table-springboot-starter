@@ -58,8 +58,12 @@ Project links:
 ### Annotation System
 
 ```java
+@FsDwAppBase(appToken = "app_token")
+public abstract class DemoAppBase {
+}
+
 @FsDwTable(name = "Table Name", tableId = "tblxxx", viewId = "vewxxx")
-public class Entity {
+public class Entity extends DemoAppBase {
     @FsDwTableId                    // Marks record ID field
     private String recordId;
 
@@ -95,7 +99,7 @@ This project uses **Forest** as the HTTP client, compared to RestTemplate/WebCli
 
 - Explicit enablement via @EnableFsDwTable to avoid conflicts with other
   implementations
-- Annotation-driven entity mapping (`@FsDwTable` / `@FsDwTableProperty` / `@FsDwTableId`)
+- Annotation-driven entity mapping (`@FsDwAppBase` / `@FsDwTable` / `@FsDwTableProperty` / `@FsDwTableId`)
 - `DwLambdaQueryWrapper` for conditions, sorting, pagination, and field selection
 - Layered Helper + Service APIs for quick use and extensible integration
 - In-memory token cache with refresh buffer to reduce auth calls
@@ -104,7 +108,7 @@ This project uses **Forest** as the HTTP client, compared to RestTemplate/WebCli
 ## Features
 
 - Auto-configuration with `@ForestScan` for API clients (enabled by annotation)
-- Annotation-driven entity mapping (`@FsDwTable` / `@FsDwTableProperty` / `@FsDwTableId`)
+- Annotation-driven entity mapping (`@FsDwAppBase` / `@FsDwTable` / `@FsDwTableProperty` / `@FsDwTableId`)
 - Database-like CRUD and MyBatis-Plus-style queries with `DwLambdaQueryWrapper`
 - Helper APIs for record, table, and field operations
 - Error handling with unified `BitableException` and `BitableErrorCode`
@@ -113,7 +117,7 @@ This project uses **Forest** as the HTTP client, compared to RestTemplate/WebCli
 
 - Java 17+
 - Spring Boot 3.x
-- Feishu app credentials (appId, appSecret, appToken)
+- Feishu app credentials (appId, appSecret); appToken is provided by @FsDwAppBase
 
 ## Installation
 
@@ -137,21 +141,28 @@ dependencies {
 
 ## Configuration
 
-Minimal configuration (required for helper APIs):
+Minimum configuration (required for Helper API):
 
 ```yaml
 duoweitable:
   app-id: your-app-id
   app-secret: your-app-secret
-  app-token: your-app-token
 ```
 
-`application.properties` equivalent:
+Equivalent `application.properties`:
 
 ```properties
 duoweitable.app-id=your-app-id
 duoweitable.app-secret=your-app-secret
-duoweitable.app-token=your-app-token
+```
+
+Configure appToken on a base entity class with `@FsDwAppBase`
+(appToken is like an Excel workbook; tableId is like a sheet):
+
+```java
+@FsDwAppBase(appToken = "app_token")
+public abstract class DemoAppBase {
+}
 ```
 
 Optional Forest client tuning (only if you need overrides):
@@ -207,11 +218,19 @@ public class ForestClientConfig {
 
 ## Quick Start
 
-### 1) Define an entity
+### 1) Define the app base class
+
+```java
+@FsDwAppBase(appToken = "app_token")
+public abstract class DemoAppBase {
+}
+```
+
+### 2) Define the entity
 
 ```java
 @FsDwTable(name = "Test Table", tableId = "tblxxxxx", viewId = "vewxxxxx")
-public class TestTable {
+public class TestTable extends DemoAppBase {
   @FsDwTableId
   private String recordId;
 
@@ -223,13 +242,13 @@ public class TestTable {
 }
 ```
 
-### 2) Query records
+### 3) Query records
 
 ```java
 List<TestTable> records = FsDwRecordHelper.queryRecords(TestTable.class);
 ```
 
-### 3) Add a record
+### 4) Add a record
 
 ```java
 TestTable add = new TestTable();
@@ -238,7 +257,7 @@ add.setAge(18);
 AddRecordRes res = FsDwRecordHelper.addRecord(add);
 ```
 
-### 4) Batch add records
+### 5) Batch add records
 
 ```java
 List<TestTable> batch = new ArrayList<>();
@@ -251,7 +270,7 @@ for (int i = 0; i < 10; i++) {
 BatchCreateRecordRes batchRes = FsDwRecordHelper.batchCreateRecords(TestTable.class, batch);
 ```
 
-### 5) Update a record
+### 6) Update a record
 
 ```java
 TestTable update = new TestTable();
@@ -260,7 +279,7 @@ update.setName("Alice");
 UpdateRecordRes res = FsDwRecordHelper.updateRecord(update);
 ```
 
-### 6) Delete a record
+### 7) Delete a record
 
 ```java
 TestTable del = new TestTable();
@@ -289,7 +308,7 @@ list = FsDwRecordHelper.queryRecords(TestTable.class, wrapper);
 
 ```java
 CreateTableRes created = FsDwTableHelper.createTable(TestTable.class);
-List<ListTableRes.TableItem> all = FsDwTableHelper.listAllTables();
+List<ListTableRes.TableItem> all = FsDwTableHelper.listAllTables(TestTable.class);
 UpdateTableRes updated = FsDwTableHelper.updateTable(TestTable.class);
 DeleteTableRes deleted = FsDwTableHelper.deleteTable(TestTable.class);
 ```
