@@ -8,7 +8,7 @@
 - Gitee: https://gitee.com/bdmcom/fs-dw-table-springboot-starter
 - GitHub: https://github.com/bendangmi/fs-dw-table-springboot-starter
 
-## 项目愿景
+## 项目说明
 
 - 将飞书多维表格作为数据源，像操作 MySQL 等数据库一样完成数据 CRUD
 - 查询能力对标 MyBatis-Plus，使用 `DwLambdaQueryWrapper` 完成条件构造
